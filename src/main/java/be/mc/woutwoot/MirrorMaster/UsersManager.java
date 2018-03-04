@@ -1,43 +1,45 @@
 package be.mc.woutwoot.MirrorMaster;
 
-import java.util.ArrayList;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
 
 
 public class UsersManager {
-	static User user;
-	static ArrayList<User> users = new ArrayList<User>();
+    static User user;
+    private static ArrayList<User> users = new ArrayList<>();
 
-	static void Set(Player player) {
-		if (CheckUser(player))
-			user = GetUser(player);
-		else {
-			RegisterUser(player);
-			user = GetUser(player);
-		}
-	}
+    static void Set(Player player) {
+        if (CheckUser(player))
+            user = GetUser(player);
+        else {
+            RegisterUser(player);
+            user = GetUser(player);
+        }
+    }
 
-	static User GetUser(Player player) {
-		for (User user : users) {
-			if (user.player.getName() == player.getName())
-				return user;
-		}
-		return null;
-	}
+    private static User GetUser(Player player) {
+        for (User user : users) {
+            if (user.player.getName().equals(player.getName()))
+                return user;
+        }
+        return null;
+    }
 
-	static boolean CheckUser(Player player) {
-		try {
-			for (User user : users) {
-				if (user.player.getName() == player.getName())
-					return true;
-			}
-			return false;
-		} catch (Exception e) {}
-		return false;
-	}
+    private static boolean CheckUser(Player player) {
+        try {
+            for (User user : users) {
+                if (user.player.getName().equals(player.getName()))
+                    return true;
+            }
+            return false;
+        } catch (Exception ignored) {
+        }
+        return false;
+    }
 
 
-	static void RegisterUser(Player player) {
-		users.add(new User(player));
-	}
+    private static void RegisterUser(Player player) {
+        users.add(new User(player));
+    }
 }

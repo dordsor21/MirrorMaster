@@ -4,22 +4,17 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 
-public class User  {
-	Player player;
-	Mirroring mirror;
-	Boolean mirrorBlockDestroyed;
-	Boolean enabled;
-	Block mirrorPoint;
-	Material mirrorPointMat;
+public class User {
+    Player player;
+    Mirroring mirror;
+    Boolean mirrorBlockDestroyed;
+    Block mirrorPoint;
+    Material mirrorPointMat;
 
-	User(Player player) {
-		this.player = player;
-		this.mirror = Mirroring.None;
-		this.mirrorBlockDestroyed = Boolean.valueOf(false);
-		this.enabled = Boolean.valueOf(true);
-	}
+    User(Player player) {
+        this.player = player;
+        this.mirror = Mirroring.None;
+        this.mirrorBlockDestroyed = false;
+    }
 
-	User() {
-		this.enabled = Boolean.valueOf(false);
-	}
 }
