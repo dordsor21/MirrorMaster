@@ -58,7 +58,7 @@ public class Functions {
     static void PlaceBlock(int xDif, int yDif, int zDif) {
         Player pl = UsersManager.user.player;
         Location l = new Location(pl.getWorld(), UsersManager.user.mirrorPoint.getX() + xDif, yDif, UsersManager.user.mirrorPoint.getZ() + zDif);
-        if (p2CheckPlace(l)) return;
+        if (!p2CheckPlace(l, pl)) return;
         UsersManager.user.player.getWorld().getBlockAt(l).setType(Variables.materialCopy);
         UsersManager.user.player.getWorld().getBlockAt(l).setData(Variables.dataCopy);
     }
@@ -66,7 +66,7 @@ public class Functions {
     static void PlaceBlock(int xDif, int yDif, int zDif, byte data) {
         Player pl = UsersManager.user.player;
         Location l = new Location(pl.getWorld(), UsersManager.user.mirrorPoint.getX() + xDif, yDif, UsersManager.user.mirrorPoint.getZ() + zDif);
-        if (p2CheckPlace(l)) return;
+        if (!p2CheckPlace(l, pl)) return;
         UsersManager.user.player.getWorld().getBlockAt(l).setType(Variables.materialCopy);
         UsersManager.user.player.getWorld().getBlockAt(l).setData(data);
     }
@@ -74,47 +74,57 @@ public class Functions {
     static void RemoveBlock(int xDif, int yDif, int zDif) {
         Player pl = UsersManager.user.player;
         Location l = new Location(pl.getWorld(), UsersManager.user.mirrorPoint.getX() + xDif, yDif, UsersManager.user.mirrorPoint.getZ() + zDif);
-        if (pxCheckRemove(l)) return;
+        if (!p2CheckRemove(l, pl)) return;
         UsersManager.user.player.getWorld().getBlockAt(l).setType(Material.AIR);
-    }
-
-    private static boolean pxCheckRemove(Location l) {
-        if (MirrorMaster.P2()) {
-            Plot p = MirrorMaster.api.getPlot(l);
-            PlotPlayer pp = PlotPlayer.wrap(p);
-            if (p != null) {
-                return !p.hasOwner() && !Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_UNOWNED) || !p.isAdded(pp.getUUID()) && !Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_OTHER) || Settings.Done.RESTRICT_BUILDING && p.getFlags().containsKey(Flags.DONE) && !Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_OTHER);
-            } else {
-                return !Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_ROAD);
-            }
-        }
-        return false;
     }
 
     static void RemoveBlock(int xDif, int yDif, int zDif, boolean normal) {
         Player pl = UsersManager.user.player;
         Location l = new Location(pl.getWorld(), UsersManager.user.mirrorPoint.getX() + xDif, yDif, UsersManager.user.mirrorPoint.getZ() + zDif);
-        if (pxCheckRemove(l)) return;
+        if (p2CheckRemove(l, pl)) return;
         UsersManager.user.player.getWorld().getBlockAt(l).breakNaturally();
+    }
+
+    private static boolean p2CheckRemove(Location l, Player pl) {
+        if (MirrorMaster.P2()) {
+            Plot p = MirrorMaster.api.getPlot(l);
+            PlotPlayer pp = PlotPlayer.wrap(pl);
+            if (p != null) {
+                if(!p.hasOwner())
+                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_UNOWNED);
+                if(Settings.Done.RESTRICT_BUILDING && p.getFlags().containsKey(Flags.DONE))
+                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_OTHER);
+                if(!p.isAdded(pp.getUUID()))
+                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_OTHER);
+            } else {
+                return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_ROAD);
+            }
+        }
+        return true;
+    }
+
+    private static boolean p2CheckPlace(Location l, Player pl) {
+        if (MirrorMaster.P2()) {
+            Plot p = MirrorMaster.api.getPlot(l);
+            PlotPlayer pp = PlotPlayer.wrap(pl);
+            if (p != null) {
+                if(!p.hasOwner())
+                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_UNOWNED);
+                if(Settings.Done.RESTRICT_BUILDING && p.getFlags().containsKey(Flags.DONE))
+                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_OTHER);
+                if(!p.isAdded(pp.getUUID()))
+                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_OTHER);
+            } else {
+                return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_ROAD);
+            }
+        }
+        return true;
     }
 
     static boolean CheckBlockMaterialLists(ArrayList<Material> list) {
         for (Material material : list) {
             if (material == Variables.currentBlock.getType())
                 return true;
-        }
-        return false;
-    }
-
-    private static boolean p2CheckPlace(Location l) {
-        if (MirrorMaster.P2()) {
-            Plot p = MirrorMaster.api.getPlot(l);
-            PlotPlayer pp = PlotPlayer.wrap(p);
-            if (p != null) {
-                return !p.hasOwner() && !Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_UNOWNED) || !p.isAdded(pp.getUUID()) && !Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_OTHER) || Settings.Done.RESTRICT_BUILDING && p.getFlags().containsKey(Flags.DONE) && !Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_OTHER);
-            } else {
-                return !Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_ROAD);
-            }
         }
         return false;
     }
