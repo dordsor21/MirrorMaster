@@ -89,50 +89,52 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         user.variables.dataCopy = event.getBlock().getData();
         user.variables.touchingBlock = event.getBlockAgainst();
 
-        if (!user.player.isSneaking()) {
-            switch (user.mirror) {
-                case CrossMirroring:
-                    break;
+        if (user.mirrorPoint != null) {
+            if (!user.player.isSneaking()) {
+                switch (user.mirror) {
+                    case CrossMirroring:
+                        break;
 
-                case None:
-                    user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                    user.variables.yDif = user.variables.currentBlock.getY();
-                    user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                    case None:
+                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        user.variables.yDif = user.variables.currentBlock.getY();
+                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
-                    CrossMirroring.Mirror(user);
-                    break;
+                        CrossMirroring.Mirror(user);
+                        break;
 
-                case Rotating180:
-                    user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                    user.variables.yDif = user.variables.currentBlock.getY();
-                    user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                    case Rotating180:
+                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        user.variables.yDif = user.variables.currentBlock.getY();
+                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
-                    XMirroring.Mirror(user);
-                    break;
+                        XMirroring.Mirror(user);
+                        break;
 
-                case Rotating90:
-                    user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                    user.variables.yDif = user.variables.currentBlock.getY();
-                    user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                    case Rotating90:
+                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        user.variables.yDif = user.variables.currentBlock.getY();
+                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
-                    ZMirroring.Mirror(user);
-                    break;
+                        ZMirroring.Mirror(user);
+                        break;
 
-                case XMirroring:
-                    user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                    user.variables.yDif = user.variables.currentBlock.getY();
-                    user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                    case XMirroring:
+                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        user.variables.yDif = user.variables.currentBlock.getY();
+                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
-                    Rotating180.Mirror(user);
-                    break;
+                        Rotating180.Mirror(user);
+                        break;
 
-                case ZMirroring:
-                    user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                    user.variables.yDif = user.variables.currentBlock.getY();
-                    user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                    case ZMirroring:
+                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        user.variables.yDif = user.variables.currentBlock.getY();
+                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
-                    Rotating90.Mirror(user);
+                        Rotating90.Mirror(user);
 
+                }
             }
         }
     }
