@@ -19,8 +19,24 @@ public class User {
         variables = new Variables();
     }
 
-    void setVariables(Variables variables) {
+    void variables(Variables variables) {
         this.variables = variables;
+    }
+
+    void mirror(Mirroring mirror) {
+        this.mirror = mirror;
+    }
+
+    void mirrorBlockDestroyed(Boolean mirrorBlockDestroyed) {
+        this.mirrorBlockDestroyed = mirrorBlockDestroyed;
+    }
+
+    void mirrorPoint(Block mirrorPoint) {
+        this.mirrorPoint = mirrorPoint;
+    }
+
+    void mirrorPointMat(Material mirrorPointMat) {
+        this.mirrorPointMat = mirrorPointMat;
     }
 
 }

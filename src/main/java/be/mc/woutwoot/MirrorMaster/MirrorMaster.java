@@ -3,6 +3,7 @@ package be.mc.woutwoot.MirrorMaster;
 import com.intellectualcrafters.plot.api.PlotAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -26,8 +27,10 @@ public class MirrorMaster extends JavaPlugin implements Listener {
             User user = UsersManager.GetUser(player);
 
             if (args.length > 0) {
-                user.variables.loc = user.player.getLocation();
-                user.variables.loc.setY(user.variables.loc.getY() - 1.0D);
+                Variables variables = user.variables;
+                variables.loc = user.player.getLocation();
+                variables.loc.setY(user.variables.loc.getY() - 1.0D);
+                user.variables(variables);
                 switch (args[0].toLowerCase()) {
                     case "tp":
                     case "teleport":
@@ -87,10 +90,12 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         UsersManager.Set(player);
         User user = UsersManager.GetUser(player);
 
-        user.variables.currentBlock = event.getBlock();
-        user.variables.materialCopy = event.getBlock().getType();
-        user.variables.dataCopy = event.getBlock().getData();
-        user.variables.touchingBlock = event.getBlockAgainst();
+        Variables variables = user.variables;
+
+        variables.currentBlock = event.getBlock();
+        variables.materialCopy = event.getBlock().getType();
+        variables.dataCopy = event.getBlock().getData();
+        variables.touchingBlock = event.getBlockAgainst();
 
         if (user.mirrorPoint != null) {
             getLogger().info("mirroring");
@@ -100,42 +105,47 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         break;
 
                     case None:
-                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                        user.variables.yDif = user.variables.currentBlock.getY();
-                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                        variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        variables.yDif = user.variables.currentBlock.getY();
+                        variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
+                        user.variables(variables);
                         CrossMirroring.Mirror(user);
                         break;
 
                     case Rotating180:
-                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                        user.variables.yDif = user.variables.currentBlock.getY();
-                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                        variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        variables.yDif = user.variables.currentBlock.getY();
+                        variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
+                        user.variables(variables);
                         XMirroring.Mirror(user);
                         break;
 
                     case Rotating90:
-                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                        user.variables.yDif = user.variables.currentBlock.getY();
-                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                        variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        variables.yDif = user.variables.currentBlock.getY();
+                        variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
+                        user.variables(variables);
                         ZMirroring.Mirror(user);
                         break;
 
                     case XMirroring:
-                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                        user.variables.yDif = user.variables.currentBlock.getY();
-                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                        variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        variables.yDif = user.variables.currentBlock.getY();
+                        variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
+                        user.variables(variables);
                         Rotating180.Mirror(user);
                         break;
 
                     case ZMirroring:
-                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                        user.variables.yDif = user.variables.currentBlock.getY();
-                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                        variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        variables.yDif = user.variables.currentBlock.getY();
+                        variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
+                        user.variables(variables);
                         Rotating90.Mirror(user);
 
                 }
@@ -149,7 +159,9 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         UsersManager.Set(player);
         User user = UsersManager.GetUser(player);
 
-        user.variables.currentBlock = event.getBlock();
+        Variables variables = user.variables;
+
+        variables.currentBlock = event.getBlock();
 
         if (user.mirrorPoint != null) {
             CheckBlock(event);
@@ -160,42 +172,47 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         break;
 
                     case None:
-                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                        user.variables.yDif = user.variables.currentBlock.getY();
-                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                        variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        variables.yDif = user.variables.currentBlock.getY();
+                        variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
+                        user.variables(variables);
                         CrossMirroring.Remove(user);
                         break;
 
                     case Rotating180:
-                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                        user.variables.yDif = user.variables.currentBlock.getY();
-                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                        variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        variables.yDif = user.variables.currentBlock.getY();
+                        variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
+                        user.variables(variables);
                         XMirroring.Remove(user);
                         break;
 
                     case Rotating90:
-                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                        user.variables.yDif = user.variables.currentBlock.getY();
-                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                        variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        variables.yDif = user.variables.currentBlock.getY();
+                        variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
+                        user.variables(variables);
                         ZMirroring.Remove(user);
                         break;
 
                     case XMirroring:
-                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                        user.variables.yDif = user.variables.currentBlock.getY();
-                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                        variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        variables.yDif = user.variables.currentBlock.getY();
+                        variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
+                        user.variables(variables);
                         Rotating180.Remove(user);
                         break;
 
                     case ZMirroring:
-                        user.variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
-                        user.variables.yDif = user.variables.currentBlock.getY();
-                        user.variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                        variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
+                        variables.yDif = user.variables.currentBlock.getY();
+                        variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
+                        user.variables(variables);
                         Rotating90.Remove(user);
                 }
             }
@@ -228,8 +245,10 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                 (user.variables.currentBlock.getLocation().getBlockY() == user.mirrorPoint.getLocation().getBlockY()) &&
                 (user.variables.currentBlock.getLocation().getBlockZ() == user.mirrorPoint.getLocation().getBlockZ())) {
             event.setCancelled(true);
-            user.mirrorPoint.setType(Material.AIR);
-            user.mirrorBlockDestroyed = true;
+            Block b = user.mirrorPoint;
+            b.setType(Material.AIR);
+            user.mirrorPoint(b);
+            user.mirrorBlockDestroyed(true);
         }
     }
 }

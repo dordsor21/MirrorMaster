@@ -1,5 +1,7 @@
 package be.mc.woutwoot.MirrorMaster;
 
+import org.bukkit.block.Block;
+
 public class Commands {
 
     static void Teleport(User user) {
@@ -36,115 +38,107 @@ public class Commands {
     }
 
     static void CrossMirroring(User user) {
-        if (user.mirrorPoint != null) {
-            if (!user.mirrorBlockDestroyed)
-                user.mirrorPoint.setType(user.mirrorPointMat);
+        norNullMirrorPoint(user);
 
-            user.mirrorBlockDestroyed = false;
-
-            user.mirror = Mirroring.None;
-        }
-
-        user.mirrorPoint = user.variables.loc.getBlock();
-        user.mirrorPointMat = user.mirrorPoint.getType();
-        user.mirrorPoint.setType(org.bukkit.Material.GLOWSTONE);
+        user.mirrorPoint(user.variables.loc.getBlock());
+        user.mirrorPointMat(user.mirrorPoint.getType());
+        Block b = user.mirrorPoint;
+        b.setType(user.mirrorPointMat);
+        user.mirrorPoint(b);
 
         user.player.sendMessage("Placed mirror cross! Use '/mm stop' to stop mirroring.");
 
-        user.mirror = Mirroring.CrossMirroring;
+        user.mirror(Mirroring.CrossMirroring);
         UsersManager.Set(user);
     }
 
     static void XMirroring(User user) {
-        if (user.mirrorPoint != null) {
-            if (!user.mirrorBlockDestroyed)
-                user.mirrorPoint.setType(user.mirrorPointMat);
+        norNullMirrorPoint(user);
 
-            user.mirrorBlockDestroyed = false;
-
-            user.mirror = Mirroring.None;
-        }
-
-        user.mirrorPoint = user.variables.loc.getBlock();
-        user.mirrorPointMat = user.mirrorPoint.getType();
-        user.mirrorPoint.setType(org.bukkit.Material.GLOWSTONE);
+        user.mirrorPoint(user.variables.loc.getBlock());
+        user.mirrorPointMat(user.mirrorPoint.getType());
+        Block b = user.mirrorPoint;
+        b.setType(user.mirrorPointMat);
+        user.mirrorPoint(b);
 
         user.player.sendMessage("Mirroring on x-axis! Use '/mm stop' to stop mirroring.");
 
-        user.mirror = Mirroring.XMirroring;
+        user.mirror(Mirroring.XMirroring);
         UsersManager.Set(user);
     }
 
     static void ZMirroring(User user) {
-        if (user.mirrorPoint != null) {
-            if (!user.mirrorBlockDestroyed)
-                user.mirrorPoint.setType(user.mirrorPointMat);
+        norNullMirrorPoint(user);
 
-            user.mirrorBlockDestroyed = false;
-
-            user.mirror = Mirroring.None;
-        }
-
-        user.mirrorPoint = user.variables.loc.getBlock();
-        user.mirrorPointMat = user.mirrorPoint.getType();
-        user.mirrorPoint.setType(org.bukkit.Material.GLOWSTONE);
+        user.mirrorPoint(user.variables.loc.getBlock());
+        user.mirrorPointMat(user.mirrorPoint.getType());
+        Block b = user.mirrorPoint;
+        b.setType(user.mirrorPointMat);
+        user.mirrorPoint(b);
 
         user.player.sendMessage("Mirroring on z-axis! Use '/mm stop' to stop mirroring.");
 
-        user.mirror = Mirroring.ZMirroring;
+        user.mirror(Mirroring.ZMirroring);
         UsersManager.Set(user);
     }
 
     static void StopMirroring(User user) {
         user.player.sendMessage("Stopped mirroring/rotating!");
 
-        if (!user.mirrorBlockDestroyed)
-            user.mirrorPoint.setType(user.mirrorPointMat);
+        if (!user.mirrorBlockDestroyed) {
+            Block b = user.mirrorPoint;
+            b.setType(user.mirrorPointMat);
+            user.mirrorPoint(b);
+        }
 
-        user.mirrorBlockDestroyed = false;
+        user.mirrorBlockDestroyed(false);
 
-        user.mirror = Mirroring.None;
+        user.mirror(Mirroring.None);
         UsersManager.Set(user);
     }
 
     static void Rotation180(User user) {
-        if (user.mirrorPoint != null) {
-            if (!user.mirrorBlockDestroyed)
-                user.mirrorPoint.setType(user.mirrorPointMat);
+        norNullMirrorPoint(user);
 
-            user.mirrorBlockDestroyed = false;
-
-            user.mirror = Mirroring.None;
-        }
-
-        user.mirrorPoint = user.variables.loc.getBlock();
-        user.mirrorPointMat = user.mirrorPoint.getType();
-        user.mirrorPoint.setType(org.bukkit.Material.GLOWSTONE);
+        user.mirrorPoint(user.variables.loc.getBlock());
+        user.mirrorPointMat(user.mirrorPoint.getType());
+        Block b = user.mirrorPoint;
+        b.setType(user.mirrorPointMat);
+        user.mirrorPoint(b);
 
         user.player.sendMessage("Rotating 180 degrees! Use '/mm stop' to stop rotating.");
 
-        user.mirror = Mirroring.Rotating180;
+        user.mirror(Mirroring.Rotating180);
         UsersManager.Set(user);
     }
 
     static void Rotation90(User user) {
-        if (user.mirrorPoint != null) {
-            if (!user.mirrorBlockDestroyed)
-                user.mirrorPoint.setType(user.mirrorPointMat);
+        norNullMirrorPoint(user);
 
-            user.mirrorBlockDestroyed = false;
-
-            user.mirror = Mirroring.None;
-        }
-
-        user.mirrorPoint = user.variables.loc.getBlock();
-        user.mirrorPointMat = user.mirrorPoint.getType();
-        user.mirrorPoint.setType(org.bukkit.Material.GLOWSTONE);
+        user.mirrorPoint(user.variables.loc.getBlock());
+        user.mirrorPointMat(user.mirrorPoint.getType());
+        Block b = user.mirrorPoint;
+        b.setType(user.mirrorPointMat);
+        user.mirrorPoint(b);
 
         user.player.sendMessage("Rotating 90 degrees! Use '/mm stop' to stop rotating.");
 
-        user.mirror = Mirroring.Rotating90;
+        user.mirror(Mirroring.Rotating90);
         UsersManager.Set(user);
+    }
+
+    private static void norNullMirrorPoint(User user) {
+        if (user.mirrorPoint != null) {
+            if (!user.mirrorBlockDestroyed) {
+                Block b = user.mirrorPoint;
+                b.setType(user.mirrorPointMat);
+                user.mirrorPoint(b);
+            }
+
+            user.mirrorBlockDestroyed(false);
+
+            user.mirror(Mirroring.None);
+        }
     }
 
     static void Help(User user) {
