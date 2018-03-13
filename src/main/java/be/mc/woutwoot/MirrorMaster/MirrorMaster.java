@@ -28,50 +28,53 @@ public class MirrorMaster extends JavaPlugin implements Listener {
             if (args.length > 0) {
                 user.variables.loc = user.player.getLocation();
                 user.variables.loc.setY(user.variables.loc.getY() - 1.0D);
-
-                if ((args[0].equals("tp")) || (args[0].equals("teleport"))) {
-                    Commands.Teleport(user);
-                    return true;
-                }
-
-                if ((args[0].equals("change")) || (args[0].equals("ch"))) {
-                    Commands.Change(args[1], user);
-                    return true;
-                }
-
-                if ((args[0].equals("mirrorcross")) || (args[0].equals("c")) || (args[0].equals("cross"))) {
-                    Commands.CrossMirroring(user);
-                    return true;
-                }
-
-                if ((args[0].equals("mirrorx")) || (args[0].equals("mx")) || (args[0].equals("x"))) {
-                    Commands.XMirroring(user);
-                    return true;
-                }
-
-                if ((args[0].equals("mirrorz")) || (args[0].equals("mz")) || (args[0].equals("z"))) {
-                    Commands.ZMirroring(user);
-                    return true;
-                }
-
-                if ((args[0].equals("rot180")) || (args[0].equals("rotate180")) || (args[0].equals("r180")) || (args[0].equals("rotating180"))) {
-                    Commands.Rotation180(user);
-                    return true;
-                }
-
-                if ((args[0].equals("rot90")) || (args[0].equals("rotate90")) || (args[0].equals("r90")) || (args[0].equals("rotating90"))) {
-                    Commands.Rotation90(user);
-                    return true;
-                }
-
-                if ((args[0].equals("mirrorstop")) || (args[0].equals("stop")) || (args[0].equals("s"))) {
-                    Commands.StopMirroring(user);
-                    return true;
-                }
-
-                if ((args[0].equals("help")) || (args[0].equals("h")) || (args[0].equals("?"))) {
-                    Commands.Help(user);
-                    return true;
+                switch (args[0].toLowerCase()) {
+                    case "tp":
+                    case "teleport":
+                        Commands.Teleport(user);
+                        return true;
+                    case "change":
+                    case "ch":
+                        Commands.Change(args[1], user);
+                        return true;
+                    case "mirrorcross":
+                    case "c":
+                    case "cross":
+                        Commands.CrossMirroring(user);
+                        return true;
+                    case "mirrorx":
+                    case "mx":
+                    case "x":
+                        Commands.XMirroring(user);
+                        return true;
+                    case "mirrorz":
+                    case "mz":
+                    case "z":
+                        Commands.ZMirroring(user);
+                        return true;
+                    case "rot180":
+                    case "rotate180":
+                    case "r180":
+                    case "180":
+                        Commands.Rotation180(user);
+                        return true;
+                    case "rot90":
+                    case "rotate90":
+                    case "r90":
+                    case "90":
+                        Commands.Rotation90(user);
+                        return true;
+                    case "mirrorstop":
+                    case "stop":
+                    case "s":
+                        Commands.StopMirroring(user);
+                        return true;
+                    case "help":
+                    case "h":
+                    case "?":
+                    default:
+                        Commands.Help(user);
+                        return true;
                 }
             }
         }
@@ -90,6 +93,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         user.variables.touchingBlock = event.getBlockAgainst();
 
         if (user.mirrorPoint != null) {
+            getLogger().info("mirroring");
             if (!user.player.isSneaking()) {
                 switch (user.mirror) {
                     case CrossMirroring:

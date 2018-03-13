@@ -32,6 +32,7 @@ public class Commands {
             user.mirror = Mirroring.Rotating180;
             user.player.sendMessage("Changed type to rotating 180 degrees!");
         }
+        UsersManager.Set(user);
     }
 
     static void CrossMirroring(User user) {
@@ -51,6 +52,7 @@ public class Commands {
         user.player.sendMessage("Placed mirror cross! Use '/mm stop' to stop mirroring.");
 
         user.mirror = Mirroring.CrossMirroring;
+        UsersManager.Set(user);
     }
 
     static void XMirroring(User user) {
@@ -70,6 +72,7 @@ public class Commands {
         user.player.sendMessage("Mirroring on x-axis! Use '/mm stop' to stop mirroring.");
 
         user.mirror = Mirroring.XMirroring;
+        UsersManager.Set(user);
     }
 
     static void ZMirroring(User user) {
@@ -89,6 +92,7 @@ public class Commands {
         user.player.sendMessage("Mirroring on z-axis! Use '/mm stop' to stop mirroring.");
 
         user.mirror = Mirroring.ZMirroring;
+        UsersManager.Set(user);
     }
 
     static void StopMirroring(User user) {
@@ -100,6 +104,7 @@ public class Commands {
         user.mirrorBlockDestroyed = false;
 
         user.mirror = Mirroring.None;
+        UsersManager.Set(user);
     }
 
     static void Rotation180(User user) {
@@ -119,6 +124,7 @@ public class Commands {
         user.player.sendMessage("Rotating 180 degrees! Use '/mm stop' to stop rotating.");
 
         user.mirror = Mirroring.Rotating180;
+        UsersManager.Set(user);
     }
 
     static void Rotation90(User user) {
@@ -138,6 +144,7 @@ public class Commands {
         user.player.sendMessage("Rotating 90 degrees! Use '/mm stop' to stop rotating.");
 
         user.mirror = Mirroring.Rotating90;
+        UsersManager.Set(user);
     }
 
     static void Help(User user) {

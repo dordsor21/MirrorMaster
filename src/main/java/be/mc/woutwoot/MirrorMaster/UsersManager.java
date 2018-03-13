@@ -13,6 +13,10 @@ public class UsersManager {
             RegisterUser(player);
     }
 
+    static void Set(User user) {
+        users.replace(user.player, user);
+    }
+
     static User GetUser(Player player) {
         if (users.containsKey(player))
             return users.get(player);
