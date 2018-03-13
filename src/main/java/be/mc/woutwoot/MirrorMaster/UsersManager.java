@@ -2,37 +2,44 @@ package be.mc.woutwoot.MirrorMaster;
 
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 
 
 public class UsersManager {
-    private static HashMap<Player, User> users = new HashMap<>();
+    static User user;
+    private static ArrayList<User> users = new ArrayList<>();
 
     static void Set(Player player) {
         if (CheckUser(player))
-            RegisterUser(player);
-    }
-
-    static void Set(User user) {
-        users.replace(user.player, user);
-    }
-
-    static User GetUser(Player player) {
-        if (users.containsKey(player))
-            return users.get(player);
+            user = GetUser(player);
         else {
-            return RegisterUser(player);
+            RegisterUser(player);
+            user = GetUser(player);
         }
     }
 
+    private static User GetUser(Player player) {
+        for (User user : users) {
+            if (user.player.getName().equals(player.getName()))
+                return user;
+        }
+        return null;
+    }
+
     private static boolean CheckUser(Player player) {
-        return users.containsKey(player);
+        try {
+            for (User user : users) {
+                if (user.player.getName().equals(player.getName()))
+                    return true;
+            }
+            return false;
+        } catch (Exception ignored) {
+        }
+        return false;
     }
 
 
-    private static User RegisterUser(Player player) {
-        User user = new User(player);
-        users.put(player, user);
-        return user;
+    private static void RegisterUser(Player player) {
+        users.add(new User(player));
     }
 }
