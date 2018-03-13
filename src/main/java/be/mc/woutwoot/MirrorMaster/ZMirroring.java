@@ -1,175 +1,129 @@
 package be.mc.woutwoot.MirrorMaster;
 
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-
 public class ZMirroring {
 
-    static void Mirror() {
-        if (Functions.CheckBlockMaterialLists(MaterialLists.Stairs))
-            Stairs();
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Levers))
-            Levers();
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Torches))
-            Torches();
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Halfslabs))
-            Halfslabs();
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Buttons))
-            Buttons();
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Doors))
-            Doors();
+    static void Mirror(User user) {
+        if (Functions.CheckBlockMaterialLists(MaterialLists.Stairs, user))
+            Stairs(user);
+        else if (Functions.CheckBlockMaterialLists(MaterialLists.Levers, user))
+            Levers(user);
+        else if (Functions.CheckBlockMaterialLists(MaterialLists.Torches, user))
+            Torches(user);
+        else if (Functions.CheckBlockMaterialLists(MaterialLists.Halfslabs, user))
+            Halfslabs(user);
+        else if (Functions.CheckBlockMaterialLists(MaterialLists.Buttons, user))
+            Buttons(user);
+        else if (Functions.CheckBlockMaterialLists(MaterialLists.Doors, user))
+            Doors(user);
         else
-            Default();
+            Default(user);
     }
 
-    static void RemoveResources(BlockPlaceEvent event) {
-        if (!Functions.CheckBlockMaterialLists(MaterialLists.Doors)) {
-            if (Variables.xDif != 0) {
-                if (event.getItemInHand().getAmount() >= 2)
-                    event.getItemInHand().setAmount(event.getItemInHand().getAmount() - 1);
-                else
-                    event.getPlayer().sendMessage("Failed mirroring, you need more blocks!");
-            }
-        } else {
-            ArrayList<ItemStack> doors = new ArrayList<>();
-            ItemStack[] arrayOfItemStack;
-            int j = (arrayOfItemStack = event.getPlayer().getInventory().getContents()).length;
-            for (int i = 0; i < j; i++) {
-                ItemStack item = arrayOfItemStack[i];
-                try {
-                    if (item.getType() == event.getItemInHand().getType()) {
-                        doors.add(item);
-                    }
-                } catch (Exception ignored) {
-                }
-            }
-
-            int handItem = event.getPlayer().getInventory().getHeldItemSlot();
-
-            if (Variables.xDif != 0) {
-                if (doors.size() >= 2) {
-                    event.getPlayer().getInventory().clear(handItem);
-                    event.getPlayer().getInventory().clear(event.getPlayer().getInventory().first(doors.get(0)));
-                } else {
-                    event.getPlayer().sendMessage("Failed mirroring, you need more doors!");
-                }
-            } else {
-                return;
-            }
-            event.getPlayer().updateInventory();
-        }
-    }
-
-    private static void Stairs() {
-        if (!Functions.Down()) {
-            switch (Functions.LookDirection()) {
+    private static void Stairs(User user) {
+        if (!Functions.Down(user)) {
+            switch (Functions.LookDirection(user)) {
                 case 0:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 2);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 2, user);
                     break;
                 case 1:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 0);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 0, user);
                     break;
                 case 2:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 3);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 3, user);
                     break;
                 case 3:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 1);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 1, user);
                     break;
             }
         } else {
-            switch (Functions.LookDirection()) {
+            switch (Functions.LookDirection(user)) {
                 case 0:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 6);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 6, user);
                     break;
                 case 1:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 4);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 4, user);
                     break;
                 case 2:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 7);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 7, user);
                     break;
                 case 3:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 5);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 5, user);
                     break;
             }
 
         }
     }
 
-    private static void Levers() {
-        if (Functions.Up())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 6);
-        if (Functions.East())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 4);
-        if (Functions.West())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 3);
-        if (Functions.South())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 2);
-        if (Functions.North())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 1);
+    private static void Levers(User user) {
+        if (Functions.Up(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 6, user);
+        if (Functions.East(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 4, user);
+        if (Functions.West(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 3, user);
+        if (Functions.South(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 2, user);
+        if (Functions.North(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 1, user);
     }
 
-    private static void Torches() {
-        if (Functions.Up())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 5);
-        if (Functions.East())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 4);
-        if (Functions.West())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 3);
-        if (Functions.South())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 2);
-        if (Functions.North())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 1);
+    private static void Torches(User user) {
+        if (Functions.Up(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 5, user);
+        if (Functions.East(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 4, user);
+        if (Functions.West(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 3, user);
+        if (Functions.South(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 2, user);
+        if (Functions.North(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 1, user);
     }
 
-    private static void Halfslabs() {
-        if (Functions.Down())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) (Variables.dataCopy + 8));
+    private static void Halfslabs(User user) {
+        if (Functions.Down(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) (user.variables.dataCopy + 8), user);
         else
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif);
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, user);
     }
 
-    private static void Buttons() {
-        if (Functions.East())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 4);
-        if (Functions.West())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 3);
-        if (Functions.South())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 2);
-        if (Functions.North())
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 1);
+    private static void Buttons(User user) {
+        if (Functions.East(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 4, user);
+        if (Functions.West(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 3, user);
+        if (Functions.South(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 2, user);
+        if (Functions.North(user))
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 1, user);
     }
 
-    private static void Doors() {
-        switch (Functions.LookDirection()) {
+    private static void Doors(User user) {
+        switch (Functions.LookDirection(user)) {
             case 0:
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 1);
-                Functions.PlaceBlock(-Variables.xDif, ++Variables.yDif, Variables.zDif, (byte) 9);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 1, user);
+                Functions.PlaceBlock(-user.variables.xDif, ++user.variables.yDif, user.variables.zDif, (byte) 9, user);
                 break;
             case 1:
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 0);
-                Functions.PlaceBlock(-Variables.xDif, ++Variables.yDif, Variables.zDif, (byte) 8);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 0, user);
+                Functions.PlaceBlock(-user.variables.xDif, ++user.variables.yDif, user.variables.zDif, (byte) 8, user);
                 break;
             case 2:
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 3);
-                Functions.PlaceBlock(-Variables.xDif, ++Variables.yDif, Variables.zDif, (byte) 11);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 3, user);
+                Functions.PlaceBlock(-user.variables.xDif, ++user.variables.yDif, user.variables.zDif, (byte) 11, user);
                 break;
             case 3:
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif, (byte) 2);
-                Functions.PlaceBlock(-Variables.xDif, ++Variables.yDif, Variables.zDif, (byte) 10);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, (byte) 2, user);
+                Functions.PlaceBlock(-user.variables.xDif, ++user.variables.yDif, user.variables.zDif, (byte) 10, user);
                 break;
         }
     }
 
-    private static void Default() {
-        Functions.PlaceBlock(-Variables.xDif, Variables.yDif, Variables.zDif);
+    private static void Default(User user) {
+        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, user);
     }
 
-    static void Remove() {
-        if (UsersManager.user.player.getGameMode() == org.bukkit.GameMode.CREATIVE)
-            Functions.RemoveBlock(-Variables.xDif, Variables.yDif, Variables.zDif);
-        else
-            Functions.RemoveBlock(-Variables.xDif, Variables.yDif, Variables.zDif, true);
+    static void Remove(User user) {
+        Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, user);
     }
 }

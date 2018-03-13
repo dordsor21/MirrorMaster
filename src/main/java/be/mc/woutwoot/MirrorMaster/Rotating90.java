@@ -1,248 +1,212 @@
 package be.mc.woutwoot.MirrorMaster;
 
-import org.bukkit.GameMode;
-import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.ArrayList;
-
 public class Rotating90 {
 
-    static void Mirror() {
-        if (Functions.CheckBlockMaterialLists(MaterialLists.Stairs))
-            Stairs();
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Levers))
-            Levers();
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Torches))
-            Torches();
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Halfslabs))
-            Halfslabs();
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Buttons))
-            Buttons();
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Doors))
-            Doors();
+
+    static void Mirror(User user) {
+        if (Functions.CheckBlockMaterialLists(MaterialLists.Stairs, user))
+            Stairs(user);
+        else if (Functions.CheckBlockMaterialLists(MaterialLists.Levers, user))
+            Levers(user);
+        else if (Functions.CheckBlockMaterialLists(MaterialLists.Torches, user))
+            Torches(user);
+        else if (Functions.CheckBlockMaterialLists(MaterialLists.Halfslabs, user))
+            Halfslabs(user);
+        else if (Functions.CheckBlockMaterialLists(MaterialLists.Buttons, user))
+            Buttons(user);
+        else if (Functions.CheckBlockMaterialLists(MaterialLists.Doors, user))
+            Doors(user);
         else
-            Default();
+            Default(user);
     }
 
-    static void RemoveResources(BlockPlaceEvent event) {
-        if (!Functions.CheckBlockMaterialLists(MaterialLists.Doors)) {
-            if ((Variables.xDif != 0) || (Variables.zDif != 0)) {
-
-                if (event.getItemInHand().getAmount() >= 4)
-                    event.getItemInHand().setAmount(event.getItemInHand().getAmount() - 3);
-                else
-                    event.getPlayer().sendMessage("Failed mirroring, you need more blocks!");
-            }
-        } else {
-            ArrayList<ItemStack> doors = new ArrayList<>();
-            ItemStack[] arrayOfItemStack;
-            int j = (arrayOfItemStack = event.getPlayer().getInventory().getContents()).length;
-            CrossMirroring.collectDoors(event, doors, arrayOfItemStack, j);
-
-            int handItem = event.getPlayer().getInventory().getHeldItemSlot();
-
-            if ((Variables.xDif != 0) || (Variables.zDif != 0)) {
-
-                if (CrossMirroring.doDoors(event, doors, handItem)) return;
-            }
-            event.getPlayer().updateInventory();
-        }
-    }
-
-    private static void Stairs() {
-        if (!Functions.Down()) {
-            switch (Functions.LookDirection()) {
+    private static void Stairs(User user) {
+        if (!Functions.Down(user)) {
+            switch (Functions.LookDirection(user)) {
                 case 0:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 3);
-                    Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 2);
-                    Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 3);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 3, user);
+                    Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 2, user);
+                    Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 3, user);
                     break;
                 case 1:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 1);
-                    Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 0);
-                    Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 0);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 1, user);
+                    Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 0, user);
+                    Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 0, user);
                     break;
                 case 2:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 2);
-                    Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 3);
-                    Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 2);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 2, user);
+                    Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 3, user);
+                    Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 2, user);
                     break;
                 case 3:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 0);
-                    Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 1);
-                    Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 1);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 0, user);
+                    Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 1, user);
+                    Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 1, user);
                     break;
             }
         } else {
-            switch (Functions.LookDirection()) {
+            switch (Functions.LookDirection(user)) {
                 case 0:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 7);
-                    Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 6);
-                    Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 7);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 7, user);
+                    Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 6, user);
+                    Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 7, user);
                     break;
                 case 1:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 5);
-                    Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 4);
-                    Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 4);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 5, user);
+                    Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 4, user);
+                    Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 4, user);
                     break;
                 case 2:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 6);
-                    Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 7);
-                    Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 6);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 6, user);
+                    Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 7, user);
+                    Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 6, user);
                     break;
                 case 3:
-                    Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 4);
-                    Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 5);
-                    Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 5);
+                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 4, user);
+                    Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 5, user);
+                    Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 5, user);
                     break;
             }
         }
     }
 
-    private static void Levers() {
-        if (Functions.Up()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 6);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 6);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 6);
+    private static void Levers(User user) {
+        if (Functions.Up(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 6, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 6, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 6, user);
         }
-        if (Functions.East()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 3);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 4);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 3);
+        if (Functions.East(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 3, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 4, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 3, user);
         }
-        if (Functions.West()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 4);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 3);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 4);
+        if (Functions.West(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 4, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 3, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 4, user);
         }
-        if (Functions.South()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 1);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 2);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 2);
+        if (Functions.South(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 1, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 2, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 2, user);
         }
-        if (Functions.North()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 2);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 1);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 1);
-        }
-    }
-
-    private static void Torches() {
-        if (Functions.Up()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 5);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 5);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 5);
-        }
-        if (Functions.East()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 3);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 4);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 3);
-        }
-        if (Functions.West()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 4);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 3);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 4);
-        }
-        if (Functions.South()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 1);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 2);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 2);
-        }
-        if (Functions.North()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 2);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 1);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 1);
+        if (Functions.North(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 2, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 1, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 1, user);
         }
     }
 
-    private static void Halfslabs() {
-        if (Functions.Down()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) (Variables.dataCopy + 8));
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) (Variables.dataCopy + 8));
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) (Variables.dataCopy + 8));
+    private static void Torches(User user) {
+        if (Functions.Up(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 5, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 5, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 5, user);
+        }
+        if (Functions.East(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 3, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 4, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 3, user);
+        }
+        if (Functions.West(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 4, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 3, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 4, user);
+        }
+        if (Functions.South(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 1, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 2, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 2, user);
+        }
+        if (Functions.North(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 2, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 1, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 1, user);
+        }
+    }
+
+    private static void Halfslabs(User user) {
+        if (Functions.Down(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) (user.variables.dataCopy + 8), user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) (user.variables.dataCopy + 8), user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) (user.variables.dataCopy + 8), user);
         } else {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif);
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
         }
     }
 
-    private static void Buttons() {
-        if (Functions.East()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 3);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 4);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 3);
+    private static void Buttons(User user) {
+        if (Functions.East(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 3, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 4, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 3, user);
         }
-        if (Functions.West()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 4);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 3);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 4);
+        if (Functions.West(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 4, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 3, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 4, user);
         }
-        if (Functions.South()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 1);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 2);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 2);
+        if (Functions.South(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 1, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 2, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 2, user);
         }
-        if (Functions.North()) {
-            Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 2);
-            Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 1);
-            Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 1);
+        if (Functions.North(user)) {
+            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 2, user);
+            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 1, user);
+            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 1, user);
         }
     }
 
-    private static void Doors() {
-        switch (Functions.LookDirection()) {
+    private static void Doors(User user) {
+        switch (Functions.LookDirection(user)) {
             case 0:
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 3);
-                Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 1);
-                Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 3);
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 11);
-                Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 9);
-                Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 11);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 3, user);
+                Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 1, user);
+                Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 3, user);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 11, user);
+                Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 9, user);
+                Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 11, user);
                 break;
             case 1:
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 2);
-                Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 0);
-                Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 0);
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 10);
-                Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 8);
-                Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 8);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 2, user);
+                Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 0, user);
+                Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 0, user);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 10, user);
+                Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 8, user);
+                Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 8, user);
                 break;
             case 2:
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 1);
-                Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 3);
-                Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 1);
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 9);
-                Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 11);
-                Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 9);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 1, user);
+                Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 3, user);
+                Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 1, user);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 9, user);
+                Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 11, user);
+                Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 9, user);
                 break;
             case 3:
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 0);
-                Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 2);
-                Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 2);
-                Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, (byte) 8);
-                Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif, (byte) 10);
-                Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif, (byte) 10);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 0, user);
+                Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 2, user);
+                Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 2, user);
+                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 8, user);
+                Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, (byte) 10, user);
+                Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, (byte) 10, user);
                 break;
         }
     }
 
-    private static void Default() {
-        Functions.PlaceBlock(-Variables.xDif, Variables.yDif, -Variables.zDif);
-        Functions.PlaceBlock(Variables.zDif, Variables.yDif, -Variables.xDif);
-        Functions.PlaceBlock(-Variables.zDif, Variables.yDif, Variables.xDif);
+    private static void Default(User user) {
+        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
+        Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
+        Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
     }
 
-    static void Remove() {
-        if (UsersManager.user.player.getGameMode() == GameMode.CREATIVE) {
-            Functions.RemoveBlock(-Variables.xDif, Variables.yDif, -Variables.zDif);
-            Functions.RemoveBlock(Variables.zDif, Variables.yDif, -Variables.xDif);
-            Functions.RemoveBlock(-Variables.zDif, Variables.yDif, Variables.xDif);
-        } else {
-            Functions.RemoveBlock(-Variables.xDif, Variables.yDif, -Variables.zDif, true);
-            Functions.RemoveBlock(Variables.zDif, Variables.yDif, -Variables.xDif, true);
-            Functions.RemoveBlock(-Variables.zDif, Variables.yDif, Variables.xDif, true);
-        }
+    static void Remove(User user) {
+        Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
+        Functions.RemoveBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
+        Functions.RemoveBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
     }
 }
