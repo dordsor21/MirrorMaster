@@ -86,101 +86,104 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         Variables.dataCopy = event.getBlock().getData();
         Variables.touchingBlock = event.getBlockAgainst();
 
-        if (!UsersManager.user.player.isSneaking()) {
-            if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
-                switch (UsersManager.user.mirror) {
-                    case CrossMirroring:
-                        break;
 
-                    case None:
-                        Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
-                        Variables.yDif = Variables.currentBlock.getY();
-                        Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+        if (UsersManager.user.mirrorPoint != null) {
+            if (!UsersManager.user.player.isSneaking()) {
+                if (event.getPlayer().getGameMode() == GameMode.CREATIVE) {
+                    switch (UsersManager.user.mirror) {
+                        case CrossMirroring:
+                            break;
 
-                        CrossMirroring.Mirror();
-                        break;
+                        case None:
+                            Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
+                            Variables.yDif = Variables.currentBlock.getY();
+                            Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
 
-                    case Rotating180:
-                        Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
-                        Variables.yDif = Variables.currentBlock.getY();
-                        Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+                            CrossMirroring.Mirror();
+                            break;
 
-                        XMirroring.Mirror();
-                        break;
+                        case Rotating180:
+                            Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
+                            Variables.yDif = Variables.currentBlock.getY();
+                            Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
 
-                    case Rotating90:
-                        Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
-                        Variables.yDif = Variables.currentBlock.getY();
-                        Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+                            XMirroring.Mirror();
+                            break;
 
-                        ZMirroring.Mirror();
-                        break;
+                        case Rotating90:
+                            Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
+                            Variables.yDif = Variables.currentBlock.getY();
+                            Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
 
-                    case XMirroring:
-                        Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
-                        Variables.yDif = Variables.currentBlock.getY();
-                        Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+                            ZMirroring.Mirror();
+                            break;
 
-                        Rotating180.Mirror();
-                        break;
+                        case XMirroring:
+                            Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
+                            Variables.yDif = Variables.currentBlock.getY();
+                            Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
 
-                    case ZMirroring:
-                        Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
-                        Variables.yDif = Variables.currentBlock.getY();
-                        Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+                            Rotating180.Mirror();
+                            break;
 
-                        Rotating90.Mirror();
+                        case ZMirroring:
+                            Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
+                            Variables.yDif = Variables.currentBlock.getY();
+                            Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
 
-                }
+                            Rotating90.Mirror();
 
-            } else if (event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
-                switch (UsersManager.user.mirror) {
-                    case CrossMirroring:
-                        break;
+                    }
 
-                    case None:
-                        Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
-                        Variables.yDif = Variables.currentBlock.getY();
-                        Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+                } else if (event.getPlayer().getGameMode() == GameMode.SURVIVAL) {
+                    switch (UsersManager.user.mirror) {
+                        case CrossMirroring:
+                            break;
 
-                        CrossMirroring.RemoveResources(event);
-                        CrossMirroring.Mirror();
-                        break;
+                        case None:
+                            Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
+                            Variables.yDif = Variables.currentBlock.getY();
+                            Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
 
-                    case Rotating180:
-                        Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
-                        Variables.yDif = Variables.currentBlock.getY();
-                        Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+                            CrossMirroring.RemoveResources(event);
+                            CrossMirroring.Mirror();
+                            break;
 
-                        XMirroring.RemoveResources(event);
-                        XMirroring.Mirror();
-                        break;
+                        case Rotating180:
+                            Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
+                            Variables.yDif = Variables.currentBlock.getY();
+                            Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
 
-                    case Rotating90:
-                        Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
-                        Variables.yDif = Variables.currentBlock.getY();
-                        Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+                            XMirroring.RemoveResources(event);
+                            XMirroring.Mirror();
+                            break;
 
-                        ZMirroring.RemoveResources(event);
-                        ZMirroring.Mirror();
-                        break;
+                        case Rotating90:
+                            Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
+                            Variables.yDif = Variables.currentBlock.getY();
+                            Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
 
-                    case XMirroring:
-                        Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
-                        Variables.yDif = Variables.currentBlock.getY();
-                        Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+                            ZMirroring.RemoveResources(event);
+                            ZMirroring.Mirror();
+                            break;
 
-                        Rotating180.RemoveResources(event);
-                        Rotating180.Mirror();
-                        break;
+                        case XMirroring:
+                            Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
+                            Variables.yDif = Variables.currentBlock.getY();
+                            Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
 
-                    case ZMirroring:
-                        Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
-                        Variables.yDif = Variables.currentBlock.getY();
-                        Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+                            Rotating180.RemoveResources(event);
+                            Rotating180.Mirror();
+                            break;
 
-                        Rotating90.RemoveResources(event);
-                        Rotating90.Mirror();
+                        case ZMirroring:
+                            Variables.xDif = Variables.currentBlock.getX() - UsersManager.user.mirrorPoint.getX();
+                            Variables.yDif = Variables.currentBlock.getY();
+                            Variables.zDif = Variables.currentBlock.getZ() - UsersManager.user.mirrorPoint.getZ();
+
+                            Rotating90.RemoveResources(event);
+                            Rotating90.Mirror();
+                    }
                 }
             }
         }
