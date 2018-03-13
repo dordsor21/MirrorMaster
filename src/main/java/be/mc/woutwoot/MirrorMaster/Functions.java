@@ -15,8 +15,8 @@ import java.util.ArrayList;
 
 public class Functions {
 
-    static int LookDirection() {
-        float yaw = UsersManager.user.player.getLocation().getYaw();
+    static int LookDirection(Player player) {
+        float yaw = player.getLocation().getYaw();
 
         while (yaw <= 0.0F)
             yaw += 360.0F;
@@ -55,34 +55,30 @@ public class Functions {
         return Variables.touchingBlock.getFace(Variables.currentBlock) == BlockFace.SOUTH;
     }
 
-    static void PlaceBlock(int xDif, int yDif, int zDif) {
-        Player pl = UsersManager.user.player;
-        Location l = new Location(pl.getWorld(), UsersManager.user.mirrorPoint.getX() + xDif, yDif, UsersManager.user.mirrorPoint.getZ() + zDif);
-        if (!p2CheckPlace(l, pl)) return;
-        UsersManager.user.player.getWorld().getBlockAt(l).setType(Variables.materialCopy);
-        UsersManager.user.player.getWorld().getBlockAt(l).setData(Variables.dataCopy);
+    static void PlaceBlock(int xDif, int yDif, int zDif, Player player) {
+        Location l = new Location(player.getWorld(), UsersManager.GetUser(player).mirrorPoint.getX() + xDif, yDif, UsersManager.GetUser(player).mirrorPoint.getZ() + zDif);
+        if (!p2CheckPlace(l, player)) return;
+        player.getWorld().getBlockAt(l).setType(Variables.materialCopy);
+        player.getWorld().getBlockAt(l).setData(Variables.dataCopy);
     }
 
-    static void PlaceBlock(int xDif, int yDif, int zDif, byte data) {
-        Player pl = UsersManager.user.player;
-        Location l = new Location(pl.getWorld(), UsersManager.user.mirrorPoint.getX() + xDif, yDif, UsersManager.user.mirrorPoint.getZ() + zDif);
-        if (!p2CheckPlace(l, pl)) return;
-        UsersManager.user.player.getWorld().getBlockAt(l).setType(Variables.materialCopy);
-        UsersManager.user.player.getWorld().getBlockAt(l).setData(data);
+    static void PlaceBlock(int xDif, int yDif, int zDif, byte data, Player player) {
+        Location l = new Location(player.getWorld(), UsersManager.GetUser(player).mirrorPoint.getX() + xDif, yDif, UsersManager.GetUser(player).mirrorPoint.getZ() + zDif);
+        if (!p2CheckPlace(l, player)) return;
+        player.getWorld().getBlockAt(l).setType(Variables.materialCopy);
+        player.getWorld().getBlockAt(l).setData(data);
     }
 
-    static void RemoveBlock(int xDif, int yDif, int zDif) {
-        Player pl = UsersManager.user.player;
-        Location l = new Location(pl.getWorld(), UsersManager.user.mirrorPoint.getX() + xDif, yDif, UsersManager.user.mirrorPoint.getZ() + zDif);
-        if (!p2CheckRemove(l, pl)) return;
-        UsersManager.user.player.getWorld().getBlockAt(l).setType(Material.AIR);
+    static void RemoveBlock(int xDif, int yDif, int zDif, Player player) {
+        Location l = new Location(player.getWorld(), UsersManager.GetUser(player).mirrorPoint.getX() + xDif, yDif, UsersManager.GetUser(player).mirrorPoint.getZ() + zDif);
+        if (!p2CheckRemove(l, player)) return;
+        player.getWorld().getBlockAt(l).setType(Material.AIR);
     }
 
-    static void RemoveBlock(int xDif, int yDif, int zDif, boolean normal) {
-        Player pl = UsersManager.user.player;
-        Location l = new Location(pl.getWorld(), UsersManager.user.mirrorPoint.getX() + xDif, yDif, UsersManager.user.mirrorPoint.getZ() + zDif);
-        if (p2CheckRemove(l, pl)) return;
-        UsersManager.user.player.getWorld().getBlockAt(l).breakNaturally();
+    static void RemoveBlock(int xDif, int yDif, int zDif, boolean normal, Player player) {
+        Location l = new Location(player.getWorld(), UsersManager.GetUser(player).mirrorPoint.getX() + xDif, yDif, UsersManager.GetUser(player).mirrorPoint.getZ() + zDif);
+        if (p2CheckRemove(l, player)) return;
+        player.getWorld().getBlockAt(l).breakNaturally();
     }
 
     private static boolean p2CheckRemove(Location l, Player pl) {
