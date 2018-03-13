@@ -10,11 +10,17 @@ public class User {
     Boolean mirrorBlockDestroyed;
     Block mirrorPoint;
     Material mirrorPointMat;
+    Variables variables;
 
     User(Player player) {
         this.player = player;
         this.mirror = Mirroring.None;
         this.mirrorBlockDestroyed = false;
+        variables = new Variables();
+    }
+
+    void setVariables(Variables variables) {
+        this.variables = variables;
     }
 
 }
