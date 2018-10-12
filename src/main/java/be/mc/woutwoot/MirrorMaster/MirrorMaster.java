@@ -18,7 +18,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MirrorMaster extends JavaPlugin implements Listener {
 
     private static boolean p2;
-    public static PlotAPI api;
+    static PlotAPI api;
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (cmd.getName().equalsIgnoreCase("mm")) {
@@ -98,7 +98,6 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         variables.touchingBlock = event.getBlockAgainst();
 
         if (user.mirrorPoint != null) {
-            getLogger().info("mirroring");
             if (!user.player.isSneaking()) {
                 switch (user.mirror) {
                     case CrossMirroring:
@@ -168,10 +167,10 @@ public class MirrorMaster extends JavaPlugin implements Listener {
 
             if (!user.player.isSneaking()) {
                 switch (user.mirror) {
-                    case CrossMirroring:
+                    case None:
                         break;
 
-                    case None:
+                    case CrossMirroring:
                         variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
                         variables.yDif = user.variables.currentBlock.getY();
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
@@ -219,7 +218,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         }
     }
 
-    public static boolean P2() {
+    static boolean P2() {
         return p2;
     }
 
