@@ -100,10 +100,10 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         if (user.mirrorPoint != null) {
             if (!user.player.isSneaking()) {
                 switch (user.mirror) {
-                    case CrossMirroring:
+                    case None:
                         break;
 
-                    case None:
+                    case CrossMirroring:
                         variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
                         variables.yDif = user.variables.currentBlock.getY();
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
