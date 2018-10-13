@@ -1,25 +1,10 @@
-package be.mc.woutwoot.MirrorMaster;
+package be.mc.woutwoot.MirrorMaster.mirrors;
+
+import be.mc.woutwoot.MirrorMaster.Mirroring;
 
 public class Rotating180 {
 
-    static void Mirror(User user) {
-        if (Functions.CheckBlockMaterialLists(MaterialLists.Stairs, user))
-            Stairs(user);
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Levers, user))
-            Levers(user);
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Torches, user))
-            Torches(user);
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Halfslabs, user))
-            Halfslabs(user);
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Buttons, user))
-            Buttons(user);
-        else if (Functions.CheckBlockMaterialLists(MaterialLists.Doors, user))
-            Doors(user);
-        else
-            Default(user);
-    }
-
-    private static void Stairs(User user) {
+    /*void Stairs(User user) {
         if (!Functions.Down(user)) {
             switch (Functions.LookDirection(user)) {
                 case 0:
@@ -55,7 +40,7 @@ public class Rotating180 {
         }
     }
 
-    private static void Levers(User user) {
+    void Levers(User user) {
         if (Functions.Up(user))
             Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 6, user);
         if (Functions.East(user))
@@ -68,7 +53,7 @@ public class Rotating180 {
             Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 1, user);
     }
 
-    private static void Torches(User user) {
+    void Torches(User user) {
         if (Functions.Up(user))
             Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 5, user);
         if (Functions.East(user))
@@ -81,14 +66,14 @@ public class Rotating180 {
             Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 1, user);
     }
 
-    private static void Halfslabs(User user) {
+    void Halfslabs(User user) {
         if (Functions.Down(user))
             Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) (user.variables.dataCopy + 8), user);
         else
             Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
     }
 
-    private static void Buttons(User user) {
+    void Buttons(User user) {
         if (Functions.East(user))
             Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 3, user);
         if (Functions.West(user))
@@ -99,7 +84,7 @@ public class Rotating180 {
             Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 1, user);
     }
 
-    private static void Doors(User user) {
+    void Doors(User user) {
         switch (Functions.LookDirection(user)) {
             case 0:
                 Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, (byte) 3, user);
@@ -121,11 +106,11 @@ public class Rotating180 {
 
     }
 
-    private static void Default(User user) {
+    void Default(User user) {
         Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
     }
 
-    static void Remove(User user) {
+    void Remove(User user) {
         Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
-    }
+    }*/
 }

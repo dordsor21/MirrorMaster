@@ -1,6 +1,7 @@
 name: MirrorMaster
 main: be.mc.woutwoot.MirrorMaster.MirrorMaster
 version: 1.21
+api-version: 1.13
 commands:
   mm:
     description: Main command for MirrorMaster.

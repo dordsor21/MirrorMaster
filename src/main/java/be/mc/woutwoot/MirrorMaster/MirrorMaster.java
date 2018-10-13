@@ -1,5 +1,8 @@
 package be.mc.woutwoot.MirrorMaster;
 
+import be.mc.woutwoot.MirrorMaster.mirrors.*;
+import be.mc.woutwoot.MirrorMaster.objects.User;
+import be.mc.woutwoot.MirrorMaster.objects.Variables;
 import com.intellectualcrafters.plot.api.PlotAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -8,6 +11,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -18,12 +22,17 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MirrorMaster extends JavaPlugin implements Listener {
 
     private static boolean p2;
+    private CrossMirroring crossMirroring;
+    private Rotating90 rotating90;
+    private Rotating180 rotating180;
+    private XMirroring xMirroring;
+    private ZMirroring zMirroring;
     static PlotAPI api;
+    static MirrorMaster instance;
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (cmd.getName().equalsIgnoreCase("mm")) {
             Player player = (Player) sender;
-            UsersManager.Set(player);
             User user = UsersManager.GetUser(player);
 
             if (args.length > 0) {
@@ -84,17 +93,16 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         return false;
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockPlace(BlockPlaceEvent event) {
         Player player = event.getPlayer();
-        UsersManager.Set(player);
         User user = UsersManager.GetUser(player);
 
         Variables variables = user.variables;
 
         variables.currentBlock = event.getBlock();
         variables.materialCopy = event.getBlock().getType();
-        variables.dataCopy = event.getBlock().getData();
+        variables.dataCopy = event.getBlock().getBlockData();
         variables.touchingBlock = event.getBlockAgainst();
 
         if (user.mirrorPoint != null) {
@@ -109,7 +117,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                         user.variables(variables);
-                        CrossMirroring.Mirror(user);
+//                        Functions.Mirror(user, crossMirroring);
                         break;
 
                     case XMirroring:
@@ -118,7 +126,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                         user.variables(variables);
-                        XMirroring.Mirror(user);
+//                        Functions.Mirror(user, xMirroring);
                         break;
 
                     case ZMirroring:
@@ -127,7 +135,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                         user.variables(variables);
-                        ZMirroring.Mirror(user);
+                        Functions.Mirror(user, zMirroring);
                         break;
 
                     case Rotating180:
@@ -136,7 +144,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                         user.variables(variables);
-                        Rotating180.Mirror(user);
+//                        Functions.Mirror(user, rotating90);
                         break;
 
                     case Rotating90:
@@ -145,17 +153,16 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                         user.variables(variables);
-                        Rotating90.Mirror(user);
+//                        Functions.Mirror(user, rotating90);
 
                 }
             }
         }
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onBlockBreak(BlockBreakEvent event) {
         Player player = event.getPlayer();
-        UsersManager.Set(player);
         User user = UsersManager.GetUser(player);
 
         Variables variables = user.variables;
@@ -176,7 +183,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                         user.variables(variables);
-                        CrossMirroring.Remove(user);
+//                        crossMirroring.Remove(user);
                         break;
 
                     case XMirroring:
@@ -185,7 +192,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                         user.variables(variables);
-                        XMirroring.Remove(user);
+//                        xMirroring.Remove(user);
                         break;
 
                     case ZMirroring:
@@ -194,7 +201,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                         user.variables(variables);
-                        ZMirroring.Remove(user);
+                        zMirroring.Remove(user);
                         break;
 
                     case Rotating180:
@@ -203,7 +210,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                         user.variables(variables);
-                        Rotating180.Remove(user);
+//                        rotating180.Remove(user);
                         break;
 
                     case Rotating90:
@@ -212,7 +219,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                         variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                         user.variables(variables);
-                        Rotating90.Remove(user);
+//                        rotating90.Remove(user);
                 }
             }
         }
@@ -229,7 +236,12 @@ public class MirrorMaster extends JavaPlugin implements Listener {
     private void Init() {
         getServer().getPluginManager().registerEvents(this, this);
 
-        MaterialLists.Init();
+        crossMirroring = new CrossMirroring();
+        rotating90 = new Rotating90();
+        rotating180 = new Rotating180();
+        xMirroring = new XMirroring();
+        zMirroring = new ZMirroring();
+        instance = this;
 
         PluginManager manager = Bukkit.getServer().getPluginManager();
         final Plugin plotsquared = manager.getPlugin("PlotSquared");

@@ -1,17 +1,13 @@
 package be.mc.woutwoot.MirrorMaster;
 
+import be.mc.woutwoot.MirrorMaster.objects.User;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
 
 
-public class UsersManager {
+class UsersManager {
     private static HashMap<Player, User> users = new HashMap<>();
-
-    static void Set(Player player) {
-        if (CheckUser(player))
-            RegisterUser(player);
-    }
 
     static void Set(User user) {
         users.replace(user.player, user);
@@ -24,11 +20,6 @@ public class UsersManager {
             return RegisterUser(player);
         }
     }
-
-    private static boolean CheckUser(Player player) {
-        return users.containsKey(player);
-    }
-
 
     private static User RegisterUser(Player player) {
         User user = new User(player);

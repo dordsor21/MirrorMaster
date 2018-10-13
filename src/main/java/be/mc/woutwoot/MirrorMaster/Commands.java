@@ -1,8 +1,11 @@
 package be.mc.woutwoot.MirrorMaster;
 
+import be.mc.woutwoot.MirrorMaster.objects.Mirrors;
+import be.mc.woutwoot.MirrorMaster.objects.User;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-public class Commands {
+class Commands {
 
     static void Teleport(User user) {
         if (user.mirrorPoint != null) {
@@ -20,65 +23,61 @@ public class Commands {
     static void Change(String arg, User user) {
         if ((arg.equals("x")) || (arg.equals("mirrorx")) || (arg.equals("mx"))) {
             user.player.sendMessage("Changed mirror type to x mirroring!");
-            user.mirror = Mirroring.XMirroring;
+            user.mirror = Mirrors.XMirroring;
         }
         if ((arg.equals("z")) || (arg.equals("mirrorz")) || (arg.equals("mz"))) {
-            user.mirror = Mirroring.ZMirroring;
+            user.mirror = Mirrors.ZMirroring;
             user.player.sendMessage("Changed mirror type to z mirroring!");
         }
         if ((arg.equals("c")) || (arg.equals("mirrorcross")) || (arg.equals("cross"))) {
-            user.mirror = Mirroring.CrossMirroring;
+            user.mirror = Mirrors.CrossMirroring;
             user.player.sendMessage("Changed mirror type to cross mirroring!");
         }
         if ((arg.equals("rot180")) || (arg.equals("rotate180")) || (arg.equals("r180")) || (arg.equals("rotating180"))) {
-            user.mirror = Mirroring.Rotating180;
+            user.mirror = Mirrors.Rotating180;
             user.player.sendMessage("Changed type to rotating 180 degrees!");
         }
         UsersManager.Set(user);
     }
 
     static void CrossMirroring(User user) {
-        norNullMirrorPoint(user);
+        notNullMirrorPoint(user);
 
         user.mirrorPoint(user.variables.loc.getBlock());
         user.mirrorPointMat(user.mirrorPoint.getType());
-        Block b = user.mirrorPoint;
-        b.setType(user.mirrorPointMat);
-        user.mirrorPoint(b);
+        user.mirrorPoint.setType(Material.GLOWSTONE);
+        user.player.sendMessage("Placed mirror cross! Use '/mm stop' to stop Mirrors.");
 
-        user.player.sendMessage("Placed mirror cross! Use '/mm stop' to stop mirroring.");
-
-        user.mirror(Mirroring.CrossMirroring);
+        user.mirror(Mirrors.CrossMirroring);
         UsersManager.Set(user);
     }
 
     static void XMirroring(User user) {
-        norNullMirrorPoint(user);
+        notNullMirrorPoint(user);
 
         user.mirrorPoint(user.variables.loc.getBlock());
         user.mirrorPointMat(user.mirrorPoint.getType());
+        user.mirrorPoint.setType(Material.GLOWSTONE);
         Block b = user.mirrorPoint;
         b.setType(user.mirrorPointMat);
         user.mirrorPoint(b);
 
-        user.player.sendMessage("Mirroring on x-axis! Use '/mm stop' to stop mirroring.");
+        user.player.sendMessage("Mirroring on x-axis! Use '/mm stop' to stop Mirrors.");
 
-        user.mirror(Mirroring.XMirroring);
+        user.mirror(Mirrors.XMirroring);
         UsersManager.Set(user);
     }
 
     static void ZMirroring(User user) {
-        norNullMirrorPoint(user);
+        notNullMirrorPoint(user);
 
         user.mirrorPoint(user.variables.loc.getBlock());
         user.mirrorPointMat(user.mirrorPoint.getType());
-        Block b = user.mirrorPoint;
-        b.setType(user.mirrorPointMat);
-        user.mirrorPoint(b);
+        user.mirrorPoint.setType(Material.GLOWSTONE);
 
-        user.player.sendMessage("Mirroring on z-axis! Use '/mm stop' to stop mirroring.");
+        user.player.sendMessage("Mirroring on z-axis! Use '/mm stop' to stop Mirrors.");
 
-        user.mirror(Mirroring.ZMirroring);
+        user.mirror(Mirrors.ZMirroring);
         UsersManager.Set(user);
     }
 
@@ -93,41 +92,37 @@ public class Commands {
 
         user.mirrorBlockDestroyed(false);
 
-        user.mirror(Mirroring.None);
+        user.mirror(Mirrors.None);
         UsersManager.Set(user);
     }
 
     static void Rotation180(User user) {
-        norNullMirrorPoint(user);
+        notNullMirrorPoint(user);
 
         user.mirrorPoint(user.variables.loc.getBlock());
         user.mirrorPointMat(user.mirrorPoint.getType());
-        Block b = user.mirrorPoint;
-        b.setType(user.mirrorPointMat);
-        user.mirrorPoint(b);
+        user.mirrorPoint.setType(Material.GLOWSTONE);
 
         user.player.sendMessage("Rotating 180 degrees! Use '/mm stop' to stop rotating.");
 
-        user.mirror(Mirroring.Rotating180);
+        user.mirror(Mirrors.Rotating180);
         UsersManager.Set(user);
     }
 
     static void Rotation90(User user) {
-        norNullMirrorPoint(user);
+        notNullMirrorPoint(user);
 
         user.mirrorPoint(user.variables.loc.getBlock());
         user.mirrorPointMat(user.mirrorPoint.getType());
-        Block b = user.mirrorPoint;
-        b.setType(user.mirrorPointMat);
-        user.mirrorPoint(b);
+        user.mirrorPoint.setType(Material.GLOWSTONE);
 
         user.player.sendMessage("Rotating 90 degrees! Use '/mm stop' to stop rotating.");
 
-        user.mirror(Mirroring.Rotating90);
+        user.mirror(Mirrors.Rotating90);
         UsersManager.Set(user);
     }
 
-    private static void norNullMirrorPoint(User user) {
+    private static void notNullMirrorPoint(User user) {
         if (user.mirrorPoint != null) {
             if (!user.mirrorBlockDestroyed) {
                 Block b = user.mirrorPoint;
@@ -137,7 +132,7 @@ public class Commands {
 
             user.mirrorBlockDestroyed(false);
 
-            user.mirror(Mirroring.None);
+            user.mirror(Mirrors.None);
         }
     }
 
