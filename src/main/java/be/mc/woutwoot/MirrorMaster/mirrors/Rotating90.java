@@ -1,8 +1,5 @@
 package be.mc.woutwoot.MirrorMaster.mirrors;
 
-import be.mc.woutwoot.MirrorMaster.Mirroring;
-import org.bukkit.block.data.type.Stairs;
-
 public class Rotating90 {
 
     /*void Stairs(User user) {

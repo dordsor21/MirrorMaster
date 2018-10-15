@@ -14,4 +14,5 @@ public class Variables {
     public int yDif;
     public int zDif;
     public Location loc;
+    public boolean placing;
 }

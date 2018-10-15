@@ -1,5 +1,6 @@
 package be.mc.woutwoot.MirrorMaster;
 
+import be.mc.woutwoot.MirrorMaster.mirrors.Mirroring;
 import be.mc.woutwoot.MirrorMaster.objects.AdjacentBlock;
 import be.mc.woutwoot.MirrorMaster.objects.User;
 import com.intellectualcrafters.plot.config.C;
@@ -14,7 +15,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.type.Stairs;
 import org.bukkit.entity.Player;
 
 public class Functions {
@@ -92,31 +92,6 @@ public class Functions {
         });
     }
 
-    private static void updateAdjacents(User user) {
-        Bukkit.getScheduler().runTaskLater(MirrorMaster.instance, () -> {
-            for (AdjacentBlock b : getRelatives(user.variables.currentBlock)) {
-                if (b.block.getBlockData() instanceof Stairs) {
-                    Stairs rdata = (Stairs) b.block.getState().getBlockData();
-                    Bukkit.getLogger().info(b.block.getLocation().toString());
-                    Bukkit.getLogger().info(rdata.getShape().name());
-                    int xdif = user.variables.currentBlock.getX() - b.block.getX();
-                    int zdif = user.variables.currentBlock.getZ() - b.block.getZ();
-                    String rshape = rdata.getShape().name();
-                    rdata.setShape(Stairs.Shape.valueOf(rshape.contains("LEFT") ? rshape.replace("LEFT", "RIGHT") : rshape.replace("RIGHT", "LEFT")));
-                    rdata.setFacing(BlockFace.valueOf(rdata.getFacing().name().equals("EAST") ? rdata.getFacing().name().replace("EAST", "WEST")
-                            : rdata.getFacing().name().replace("WEST", "EAST")));
-                    Functions.ChangeData(-user.variables.xDif + xdif, user.variables.yDif, user.variables.zDif - zdif, rdata, user);
-                }
-            }
-        }, 1L);
-    }
-
-    private static void ChangeData(int xDif, int yDif, int zDif, BlockData data, User user) {
-        Location l = new Location(user.player.getWorld(), user.mirrorPoint.getX() + xDif, yDif, user.mirrorPoint.getZ() + zDif);
-        if (!p2CheckPlace(l, user.player)) return;
-        l.getBlock().setBlockData(data, false);
-    }
-
     private static boolean p2CheckRemove(Location l, Player pl) {
         if (MirrorMaster.P2()) {
             Plot p = MirrorMaster.api.getPlot(l);
@@ -162,12 +137,20 @@ public class Functions {
             mirroring.Torches(user);
         else if (user.variables.currentBlock.getType().name().toLowerCase().contains("slab"))
             mirroring.Halfslabs(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("door"))
+        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("_door"))
             mirroring.Doors(user);
         else if (user.variables.currentBlock.getType().name().toLowerCase().contains("gate"))
             mirroring.Gates(user);
         else if (user.variables.currentBlock.getType().name().toLowerCase().contains("fence") || user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall"))
             mirroring.Fences(user);
+        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("trapdoor"))
+            mirroring.Trapdoors(user);
+        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("piston"))
+            mirroring.Pistons(user);
+        else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("end_rod"))
+            mirroring.EndRods(user);
+        else if(user.variables.currentBlock.getType().name().toLowerCase().endsWith("chest"))
+            mirroring.Chests(user);
         else
             mirroring.Default(user);
     }

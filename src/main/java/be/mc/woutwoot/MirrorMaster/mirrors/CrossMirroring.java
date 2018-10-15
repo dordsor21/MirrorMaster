@@ -1,11 +1,5 @@
 package be.mc.woutwoot.MirrorMaster.mirrors;
 
-import be.mc.woutwoot.MirrorMaster.Mirroring;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.Bisected;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.type.*;
-
 public class CrossMirroring {
 
     /*void Stairs(User user) {

@@ -1,7 +1,5 @@
 package be.mc.woutwoot.MirrorMaster.mirrors;
 
-import be.mc.woutwoot.MirrorMaster.Mirroring;
-
 public class Rotating180 {
 
     /*void Stairs(User user) {
