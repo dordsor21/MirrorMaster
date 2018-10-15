@@ -4,6 +4,9 @@ import be.mc.woutwoot.MirrorMaster.events.MirrorEvent;
 import be.mc.woutwoot.MirrorMaster.mirrors.*;
 import be.mc.woutwoot.MirrorMaster.objects.User;
 import be.mc.woutwoot.MirrorMaster.objects.Variables;
+import be.mc.woutwoot.MirrorMaster.util.Commands;
+import be.mc.woutwoot.MirrorMaster.util.Functions;
+import be.mc.woutwoot.MirrorMaster.util.UsersManager;
 import com.intellectualcrafters.plot.api.PlotAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -28,8 +31,8 @@ public class MirrorMaster extends JavaPlugin implements Listener {
     private Rotating180 rotating180;
     private XMirroring xMirroring;
     private ZMirroring zMirroring;
-    static PlotAPI api;
-    static MirrorMaster instance;
+    public static PlotAPI api;
+    public static MirrorMaster instance;
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (cmd.getName().equalsIgnoreCase("mm")) {
@@ -244,7 +247,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
             }
     }
 
-    static boolean P2() {
+    public static boolean P2() {
         return p2;
     }
 

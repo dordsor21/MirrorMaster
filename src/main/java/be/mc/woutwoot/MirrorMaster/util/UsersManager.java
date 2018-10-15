@@ -1,4 +1,4 @@
-package be.mc.woutwoot.MirrorMaster;
+package be.mc.woutwoot.MirrorMaster.util;
 
 import be.mc.woutwoot.MirrorMaster.objects.User;
 import org.bukkit.entity.Player;
@@ -6,14 +6,14 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 
 
-class UsersManager {
+public class UsersManager {
     private static HashMap<Player, User> users = new HashMap<>();
 
     static void Set(User user) {
         users.replace(user.player, user);
     }
 
-    static User GetUser(Player player) {
+    public static User GetUser(Player player) {
         if (users.containsKey(player))
             return users.get(player);
         else {

@@ -1,13 +1,13 @@
-package be.mc.woutwoot.MirrorMaster;
+package be.mc.woutwoot.MirrorMaster.util;
 
 import be.mc.woutwoot.MirrorMaster.objects.Mirrors;
 import be.mc.woutwoot.MirrorMaster.objects.User;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 
-class Commands {
+public class Commands {
 
-    static void Teleport(User user) {
+    public static void Teleport(User user) {
         if (user.mirrorPoint != null) {
             org.bukkit.Location tp = user.mirrorPoint.getLocation();
             tp.setY(user.mirrorPoint.getY() + 1);
@@ -20,7 +20,7 @@ class Commands {
         }
     }
 
-    static void Change(String arg, User user) {
+    public static void Change(String arg, User user) {
         if ((arg.equals("x")) || (arg.equals("mirrorx")) || (arg.equals("mx"))) {
             user.player.sendMessage("Changed mirror type to x mirroring!");
             user.mirror = Mirrors.XMirroring;
@@ -40,7 +40,7 @@ class Commands {
         UsersManager.Set(user);
     }
 
-    static void CrossMirroring(User user) {
+    public static void CrossMirroring(User user) {
         notNullMirrorPoint(user);
 
         user.mirrorPoint(user.variables.loc.getBlock());
@@ -52,7 +52,7 @@ class Commands {
         UsersManager.Set(user);
     }
 
-    static void XMirroring(User user) {
+    public static void XMirroring(User user) {
         notNullMirrorPoint(user);
 
         user.mirrorPoint(user.variables.loc.getBlock());
@@ -68,7 +68,7 @@ class Commands {
         UsersManager.Set(user);
     }
 
-    static void ZMirroring(User user) {
+    public static void ZMirroring(User user) {
         notNullMirrorPoint(user);
 
         user.mirrorPoint(user.variables.loc.getBlock());
@@ -81,7 +81,7 @@ class Commands {
         UsersManager.Set(user);
     }
 
-    static void StopMirroring(User user) {
+    public static void StopMirroring(User user) {
         user.player.sendMessage("Stopped mirroring/rotating!");
 
         if (!user.mirrorBlockDestroyed) {
@@ -96,7 +96,7 @@ class Commands {
         UsersManager.Set(user);
     }
 
-    static void Rotation180(User user) {
+    public static void Rotation180(User user) {
         notNullMirrorPoint(user);
 
         user.mirrorPoint(user.variables.loc.getBlock());
@@ -109,7 +109,7 @@ class Commands {
         UsersManager.Set(user);
     }
 
-    static void Rotation90(User user) {
+    public static void Rotation90(User user) {
         notNullMirrorPoint(user);
 
         user.mirrorPoint(user.variables.loc.getBlock());
@@ -136,7 +136,7 @@ class Commands {
         }
     }
 
-    static void Help(User user) {
+    public static void Help(User user) {
         user.player.sendMessage("MirrorMaster command list:");
         user.player.sendMessage("/mm [x/z/c] (Uses the axis as a mirror, c uses both)");
         user.player.sendMessage("/mm [r180] (Rotates around the center)");

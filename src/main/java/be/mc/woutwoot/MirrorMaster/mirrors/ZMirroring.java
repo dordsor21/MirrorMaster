@@ -1,6 +1,6 @@
 package be.mc.woutwoot.MirrorMaster.mirrors;
 
-import be.mc.woutwoot.MirrorMaster.Functions;
+import be.mc.woutwoot.MirrorMaster.util.Functions;
 import be.mc.woutwoot.MirrorMaster.objects.AdjacentBlock;
 import be.mc.woutwoot.MirrorMaster.objects.User;
 import org.bukkit.Bukkit;

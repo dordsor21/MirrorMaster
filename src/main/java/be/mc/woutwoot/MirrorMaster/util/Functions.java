@@ -1,5 +1,6 @@
-package be.mc.woutwoot.MirrorMaster;
+package be.mc.woutwoot.MirrorMaster.util;
 
+import be.mc.woutwoot.MirrorMaster.MirrorMaster;
 import be.mc.woutwoot.MirrorMaster.mirrors.Mirroring;
 import be.mc.woutwoot.MirrorMaster.objects.AdjacentBlock;
 import be.mc.woutwoot.MirrorMaster.objects.User;
@@ -128,7 +129,7 @@ public class Functions {
         return true;
     }
 
-    static void Mirror(User user, Mirroring mirroring) {
+    public static void Mirror(User user, Mirroring mirroring) {
         if (user.variables.currentBlock.getType().name().toLowerCase().contains("stairs"))
             mirroring.Stairs(user);
         else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("lever") || user.variables.currentBlock.getType().name().toLowerCase().contains("button"))
