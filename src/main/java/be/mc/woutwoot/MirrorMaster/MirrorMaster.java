@@ -116,7 +116,8 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         if (!e.isCancelled()) {
             user = e.getUser();
             if (user.mirrorPoint != null) {
-                if (!user.player.isSneaking()) {
+                if (!user.player.isSneaking() || event.getBlockAgainst().getType().isInteractable() || event.getBlock().getType() == Material.HOPPER || event.getBlock().getType() == Material.DISPENSER ||
+                        event.getBlock().getType() == Material.DROPPER || event.getBlock().getType() == Material.NOTE_BLOCK) {
                     switch (user.mirror) {
                         case None:
                             break;
@@ -139,7 +140,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                             user.variables(variables);
-//                        Functions.Mirror(user, xMirroring);
+                            Functions.Mirror(user, xMirroring);
                             break;
 
                         case ZMirroring:
@@ -214,7 +215,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                             user.variables(variables);
-//                        xMirroring.Remove(user);
+                            xMirroring.Remove(user);
                             break;
 
                         case ZMirroring:

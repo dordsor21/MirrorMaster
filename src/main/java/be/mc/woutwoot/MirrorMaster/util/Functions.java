@@ -138,36 +138,45 @@ public class Functions {
     }
 
     public static void Mirror(User user, Mirroring mirroring) {
-        if (user.variables.currentBlock.getType().name().toLowerCase().contains("stairs"))
+        String block = user.variables.currentBlock.getType().name().toLowerCase();
+        if (block.contains("stairs"))
             mirroring.Stairs(user);
-        else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("lever") || user.variables.currentBlock.getType().name().toLowerCase().contains("button"))
+        else if (block.equalsIgnoreCase("lever") || block.contains("button"))
             mirroring.ButtonLevers(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("torch"))
+        else if (block.contains("torch"))
             mirroring.Torches(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("slab"))
+        else if (block.contains("slab"))
             mirroring.Halfslabs(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("_door"))
+        else if (block.contains("_door"))
             mirroring.Doors(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("gate"))
+        else if (block.contains("gate"))
             mirroring.Gates(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("fence") || user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")
-                || user.variables.currentBlock.getType().name().equalsIgnoreCase("iron_bars"))
+        else if (block.contains("fence") || block.contains("cobblestone_wall") || block.equalsIgnoreCase("iron_bars"))
             mirroring.Fences(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("trapdoor"))
+        else if (block.contains("trapdoor"))
             mirroring.Trapdoors(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("piston"))
+        else if (block.contains("piston"))
             mirroring.Pistons(user);
-        else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("end_rod"))
+        else if (block.equalsIgnoreCase("end_rod"))
             mirroring.EndRods(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().endsWith("chest"))
+        else if (block.endsWith("chest"))
             mirroring.Chests(user);
-        else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("ladder") || user.variables.currentBlock.getType().name().equalsIgnoreCase("carved_pumpkin")
-                || user.variables.currentBlock.getType().name().equalsIgnoreCase("jack_o_lantern"))
+        else if (block.equalsIgnoreCase("ladder") || block.equalsIgnoreCase("carved_pumpkin") || block.equalsIgnoreCase("jack_o_lantern") || block.equalsIgnoreCase("observer") ||
+                block.equalsIgnoreCase("dispenser") || block.equalsIgnoreCase("dropper") || block.equalsIgnoreCase("comparator") || block.equalsIgnoreCase("repeater"))
             mirroring.RotateXZ(user);
-        else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("vine"))
+        else if (block.equalsIgnoreCase("vine"))
             mirroring.Vines(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("glass_pane"))
+        else if (block.contains("glass_pane"))
             mirroring.GlassPanes(user);
+        else if (block.equalsIgnoreCase("tripwire_hook"))
+            mirroring.TripWire(user);
+        else if (block.equalsIgnoreCase("hopper"))
+            mirroring.Hopper(user);
+        else if (block.equalsIgnoreCase("sunflower") || block.equalsIgnoreCase("lilac") || block.equalsIgnoreCase("rose_bush") || block.equalsIgnoreCase("peony") ||
+                block.equalsIgnoreCase("tall_grass") || block.equalsIgnoreCase("large_fern"))
+            mirroring.TallFlower(user);
+        else if (block.contains("terracotta"))
+            mirroring.Terracotta(user);
         else
             mirroring.Default(user);
     }

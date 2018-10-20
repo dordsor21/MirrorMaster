@@ -7,12 +7,14 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Bisected;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.MultipleFacing;
 import org.bukkit.block.data.type.*;
 
 import static org.bukkit.block.BlockFace.*;
 
+@SuppressWarnings("Duplicates")
 public class ZMirroring implements Mirroring {
 
     public void Stairs(User user) {
@@ -25,19 +27,19 @@ public class ZMirroring implements Mirroring {
         switch (Functions.LookDirection(user)) {
             case "south":
                 data.setFacing(SOUTH);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+                Place(data, user);
                 break;
             case "north":
                 data.setFacing(NORTH);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+                Place(data, user);
                 break;
             case "east":
                 data.setFacing(WEST);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+                Place(data, user);
                 break;
             case "west":
                 data.setFacing(EAST);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+                Place(data, user);
                 break;
         }
 
@@ -115,7 +117,7 @@ public class ZMirroring implements Mirroring {
                 data.setFace(UP, false);
             else
                 data.setFace(UP, true);
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+        Place(data, user);
     }
 
     public void GlassPanes(User user) {
@@ -131,7 +133,7 @@ public class ZMirroring implements Mirroring {
                 Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, bars, ab.block.getType(), user, doBlockFace(ab.blockFace));
             } else
                 data = (GlassPane) genericFencePane(data, ab);
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+        Place(data, user);
         if (user.variables.touchingBlock.getType().name().toLowerCase().contains("glass_pane")) {
             GlassPane pane = (GlassPane) user.variables.touchingBlock.getBlockData().clone();
             for (AdjacentBlock ab : Functions.getRelatives(user.variables.touchingBlock))
@@ -175,15 +177,9 @@ public class ZMirroring implements Mirroring {
                     data.setFace(doBlockFace(ab.blockFace), true);
                 else if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace)) {
+                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
                         data.setFace(doBlockFace(ab.blockFace), true);
-                        gate.setInWall(true);
-                        if (ab.block == user.variables.currentBlock) {
-                            if (user.variables.placing)
-                                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, gate, user);
-                        } else
-                            Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, gate, ab.block.getType(), user, doBlockFace(ab.blockFace));
-                    } else
+                    else
                         data.setFace(doBlockFace(ab.blockFace), false);
                 } else
                     data = genericFencePane(data, ab);
@@ -214,7 +210,7 @@ public class ZMirroring implements Mirroring {
     }
 
     private BlockFace doBlockFace(BlockFace bf) {
-        if (bf == SOUTH || bf == NORTH || bf == UP || bf == DOWN)
+        if (bf != EAST && bf != WEST)
             return bf;
         return bf == EAST ? WEST : EAST;
     }
@@ -237,7 +233,7 @@ public class ZMirroring implements Mirroring {
     public void Gates(User user) {
         Gate data = (Gate) user.variables.dataCopy;
         data.setFacing(doBlockFace(data.getFacing()));
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+        Place(data, user);
         for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
             if (ab.block.getBlockData() instanceof Fence) {
                 Fence fence = (Fence) doFencePane(ab.block, user);
@@ -251,19 +247,19 @@ public class ZMirroring implements Mirroring {
             switch (Functions.LookDirection(user)) {
                 case "east":
                     data.setFacing(WEST);
-                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+                    Place(data, user);
                     break;
                 case "west":
                     data.setFacing(EAST);
-                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+                    Place(data, user);
                     break;
                 case "south":
                     data.setFacing(SOUTH);
-                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+                    Place(data, user);
                     break;
                 case "north":
                     data.setFacing(NORTH);
-                    Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+                    Place(data, user);
                     break;
             }
             data.setFace(Switch.Face.FLOOR);
@@ -277,7 +273,7 @@ public class ZMirroring implements Mirroring {
             data.setFacing(SOUTH);
         else if (Functions.North(user))
             data.setFacing(NORTH);
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+        Place(data, user);
     }
 
     public void Torches(User user) {
@@ -292,7 +288,7 @@ public class ZMirroring implements Mirroring {
                 data.setFacing(SOUTH);
             else
                 data.setFacing(NORTH);
-            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+            Place(data, user);
         } else if (mat.equalsIgnoreCase("WALL_TORCH")) {
             Directional data = (Directional) user.variables.dataCopy;
             if (Functions.East(user))
@@ -303,12 +299,12 @@ public class ZMirroring implements Mirroring {
                 data.setFacing(SOUTH);
             else
                 data.setFacing(NORTH);
-            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+            Place(data, user);
         }
     }
 
     public void Halfslabs(User user) {
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, user.variables.dataCopy, user);
+        Place(user.variables.dataCopy, user);
         Slab data = (Slab) user.variables.dataCopy;
         if (data.getType() == Slab.Type.DOUBLE) {
             for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
@@ -328,7 +324,7 @@ public class ZMirroring implements Mirroring {
                 datab.setFacing(SOUTH);
                 datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datab.setHalf(Bisected.Half.BOTTOM);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, datab, user);
+                Place(datab, user);
 
                 datat.setFacing(SOUTH);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
@@ -339,7 +335,7 @@ public class ZMirroring implements Mirroring {
                 datab.setFacing(NORTH);
                 datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datab.setHalf(Bisected.Half.BOTTOM);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, datab, user);
+                Place(datab, user);
 
                 datat.setFacing(NORTH);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
@@ -350,7 +346,7 @@ public class ZMirroring implements Mirroring {
                 datab.setFacing(WEST);
                 datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datab.setHalf(Bisected.Half.BOTTOM);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, datab, user);
+                Place(datab, user);
 
                 datat.setFacing(WEST);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
@@ -361,7 +357,7 @@ public class ZMirroring implements Mirroring {
                 datab.setFacing(EAST);
                 datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datab.setHalf(Bisected.Half.BOTTOM);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, datab, user);
+                Place(datab, user);
 
                 datat.setFacing(EAST);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
@@ -374,26 +370,26 @@ public class ZMirroring implements Mirroring {
     public void Trapdoors(User user) {
         TrapDoor data = (TrapDoor) user.variables.dataCopy;
         data.setFacing(doBlockFace(data.getFacing()));
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+        Place(data, user);
     }
 
     public void Pistons(User user) {
         Piston data = (Piston) user.variables.dataCopy;
         data.setFacing(doBlockFace(data.getFacing()));
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+        Place(data, user);
     }
 
     public void EndRods(User user) {
         Directional data = (Directional) user.variables.dataCopy;
         data.setFacing(doBlockFace(data.getFacing()));
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+        Place(data, user);
     }
 
     public void Chests(User user) {
         if (user.variables.currentBlock.getType() == Material.ENDER_CHEST) {
             EnderChest data = (EnderChest) user.variables.dataCopy;
             data.setFacing(doBlockFace(data.getFacing()));
-            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+            Place(data, user);
         } else {
             Chest data = (Chest) user.variables.dataCopy.clone();
             data.setFacing(doBlockFace(data.getFacing()));
@@ -506,14 +502,14 @@ public class ZMirroring implements Mirroring {
                         break;
                 }
             }
-            Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+            Place(data, user);
         }
     }
 
     public void RotateXZ(User user) {
         Directional data = (Directional) user.variables.dataCopy;
         data.setFacing(doBlockFace(data.getFacing()));
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+        Place(data, user);
     }
 
     public void Vines(User user) {
@@ -523,7 +519,51 @@ public class ZMirroring implements Mirroring {
             vine.setFace(face, false);
             vine.setFace(doBlockFace(face), true);
         }
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, vine, user);
+        Place(vine, user);
+    }
+
+    public void TripWire(User user) {
+        TripwireHook data = (TripwireHook) user.variables.dataCopy.clone();
+        data.setFacing(doBlockFace(data.getFacing()));
+        Place(data, user);
+    }
+
+    public void Hopper(User user) {
+        Hopper data = (Hopper) user.variables.dataCopy.clone();
+        data.setFacing(doBlockFace(data.getFacing()));
+        Place(data, user);
+    }
+
+    public void TallFlower(User user) {
+        Bisected data = (Bisected) user.variables.dataCopy.clone();
+        Bisected data2 = (Bisected) user.variables.dataCopy.clone();
+        data2.setHalf(data.getHalf() == Bisected.Half.BOTTOM ? Bisected.Half.TOP : Bisected.Half.BOTTOM);
+        Place(data, user);
+        int y = user.variables.yDif;
+        Functions.PlaceBlock(-user.variables.xDif, data.getHalf() == Bisected.Half.BOTTOM ? y + 1 : y - 1, user.variables.zDif, data2, user);
+    }
+
+    public void Terracotta(User user) {
+        Directional data = (Directional) user.variables.dataCopy.clone();
+        switch (data.getFacing()) {
+            case NORTH:
+                data.setFacing(BlockFace.EAST);
+                break;
+            case EAST:
+                data.setFacing(BlockFace.NORTH);
+                break;
+            case SOUTH:
+                data.setFacing(BlockFace.WEST);
+                break;
+            case WEST:
+                data.setFacing(BlockFace.SOUTH);
+                break;
+        }
+        Place(data, user);
+    }
+
+    private void Place(BlockData data, User user) {
+        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
     }
 
     public void Default(User user) {
@@ -542,12 +582,10 @@ public class ZMirroring implements Mirroring {
     @SuppressWarnings("Duplicates")
     public void Remove(User user) {
         Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, user);
-        if (user.variables.currentBlock.getType().name().toLowerCase().contains("_door")) {
-            Door door = (Door) user.variables.currentBlock.getBlockData().clone();
-            if (door.getHalf().equals(Bisected.Half.BOTTOM))
-                Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, user);
-            else
-                Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif - 1, user.variables.zDif, user);
+        if (user.variables.currentBlock.getBlockData() instanceof Bisected) {
+            Bisected data = (Bisected) user.variables.currentBlock.getBlockData().clone();
+            int y = user.variables.yDif;
+            Functions.RemoveBlock(-user.variables.xDif, data.getHalf() == Bisected.Half.BOTTOM ? y + 1 : y - 1, user.variables.zDif, user);
         }
         for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
             if (ab.block.getBlockData() instanceof Fence) {

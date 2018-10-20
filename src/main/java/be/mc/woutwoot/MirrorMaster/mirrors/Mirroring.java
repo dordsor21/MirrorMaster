@@ -32,6 +32,14 @@ public interface Mirroring {
 
     void GlassPanes(User user);
 
+    void TripWire(User user);
+
+    void Hopper(User user);
+
+    void TallFlower(User user);
+
+    void Terracotta(User user);
+
     void Default(User user);
 
     void Remove(User user);
