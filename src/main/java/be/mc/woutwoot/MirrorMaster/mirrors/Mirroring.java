@@ -26,6 +26,12 @@ public interface Mirroring {
 
     void Chests(User user);
 
+    void RotateXZ(User user);
+
+    void Vines(User user);
+
+    void GlassPanes(User user);
+
     void Default(User user);
 
     void Remove(User user);

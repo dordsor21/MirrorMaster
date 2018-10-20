@@ -76,6 +76,14 @@ public class Functions {
         });
     }
 
+    public static void PlaceBlock(Block b, BlockData data, Material mat, User user) {
+        Bukkit.getScheduler().runTask(MirrorMaster.instance, () -> {
+            if (!p2CheckPlace(b.getLocation(), user.player)) return;
+            b.setType(mat, true);
+            b.setBlockData(data, true);
+        });
+    }
+
     public static void PlaceBlockRelative(int xDif, int yDif, int zDif, BlockData data, Material mat, User user, BlockFace bf) {
         Bukkit.getScheduler().runTask(MirrorMaster.instance, () -> {
             Location l = new Location(user.player.getWorld(), user.mirrorPoint.getX() + xDif, yDif, user.mirrorPoint.getZ() + zDif);
@@ -142,7 +150,8 @@ public class Functions {
             mirroring.Doors(user);
         else if (user.variables.currentBlock.getType().name().toLowerCase().contains("gate"))
             mirroring.Gates(user);
-        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("fence") || user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall"))
+        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("fence") || user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")
+                || user.variables.currentBlock.getType().name().equalsIgnoreCase("iron_bars"))
             mirroring.Fences(user);
         else if (user.variables.currentBlock.getType().name().toLowerCase().contains("trapdoor"))
             mirroring.Trapdoors(user);
@@ -150,8 +159,15 @@ public class Functions {
             mirroring.Pistons(user);
         else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("end_rod"))
             mirroring.EndRods(user);
-        else if(user.variables.currentBlock.getType().name().toLowerCase().endsWith("chest"))
+        else if (user.variables.currentBlock.getType().name().toLowerCase().endsWith("chest"))
             mirroring.Chests(user);
+        else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("ladder") || user.variables.currentBlock.getType().name().equalsIgnoreCase("carved_pumpkin")
+                || user.variables.currentBlock.getType().name().equalsIgnoreCase("jack_o_lantern"))
+            mirroring.RotateXZ(user);
+        else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("vine"))
+            mirroring.Vines(user);
+        else if (user.variables.currentBlock.getType().name().toLowerCase().contains("glass_pane"))
+            mirroring.GlassPanes(user);
         else
             mirroring.Default(user);
     }
