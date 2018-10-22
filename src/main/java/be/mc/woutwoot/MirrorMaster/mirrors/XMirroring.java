@@ -396,29 +396,6 @@ public class XMirroring implements Mirroring {
             if (data.getType() != Chest.Type.SINGLE) {
                 data.setType(data.getType() == Chest.Type.LEFT ? Chest.Type.RIGHT : Chest.Type.LEFT);
                 switch (((Chest) user.variables.dataCopy).getFacing()) {
-                    case NORTH:
-                        if (user.variables.currentBlock.getRelative(BlockFace.EAST).getType() == user.variables.currentBlock.getType() &&
-                                ((Chest) user.variables.currentBlock.getRelative(BlockFace.EAST).getBlockData()).getFacing() == NORTH &&
-                                ((Chest) user.variables.currentBlock.getRelative(BlockFace.EAST).getBlockData()).getType() == Chest.Type.SINGLE) {
-                            Chest chest = (Chest) user.variables.currentBlock.getRelative(BlockFace.EAST).getBlockData().clone();
-                            if (chest.getFacing() == NORTH && chest.getType() == Chest.Type.SINGLE) {
-                                chest.setType(Chest.Type.LEFT);
-                                data.setType(Chest.Type.RIGHT);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.WEST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.EAST);
-                            } else
-                                data.setType(Chest.Type.SINGLE);
-                        } else if (user.variables.currentBlock.getRelative(BlockFace.WEST).getType() == user.variables.currentBlock.getType()) {
-                            Chest chest = (Chest) user.variables.currentBlock.getRelative(BlockFace.WEST).getBlockData().clone();
-                            if (chest.getFacing() == NORTH && chest.getType() == Chest.Type.SINGLE) {
-                                chest.setType(Chest.Type.RIGHT);
-                                data.setType(Chest.Type.LEFT);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.EAST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.WEST);
-                            } else
-                                data.setType(Chest.Type.SINGLE);
-                        }
-                        break;
                     case EAST:
                         if (user.variables.currentBlock.getRelative(BlockFace.SOUTH).getType() == user.variables.currentBlock.getType() &&
                                 ((Chest) user.variables.currentBlock.getRelative(BlockFace.SOUTH).getBlockData()).getFacing() == EAST &&
@@ -427,11 +404,8 @@ public class XMirroring implements Mirroring {
                             if (chest.getFacing() == EAST && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
-                                chest.setFacing(BlockFace.WEST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.SOUTH);
-                                Chest chest2 = (Chest) data.clone();
-                                chest2.setFacing(BlockFace.EAST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.SOUTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.SOUTH);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         } else if (user.variables.currentBlock.getRelative(BlockFace.NORTH).getType() == user.variables.currentBlock.getType()) {
@@ -439,34 +413,37 @@ public class XMirroring implements Mirroring {
                             if (chest.getFacing() == EAST && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
-                                chest.setFacing(BlockFace.WEST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.NORTH);
-                                Chest chest2 = (Chest) data.clone();
-                                chest2.setFacing(BlockFace.EAST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.SOUTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.NORTH);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
                         break;
-                    case SOUTH:
-                        if (user.variables.currentBlock.getRelative(BlockFace.WEST).getType() == user.variables.currentBlock.getType() &&
-                                ((Chest) user.variables.currentBlock.getRelative(BlockFace.WEST).getBlockData()).getFacing() == SOUTH &&
-                                ((Chest) user.variables.currentBlock.getRelative(BlockFace.WEST).getBlockData()).getType() == Chest.Type.SINGLE) {
-                            Chest chest = (Chest) user.variables.currentBlock.getRelative(BlockFace.WEST).getBlockData().clone();
-                            if (chest.getFacing() == SOUTH && chest.getType() == Chest.Type.SINGLE) {
+                    case NORTH:
+                        if (user.variables.currentBlock.getRelative(BlockFace.EAST).getType() == user.variables.currentBlock.getType() &&
+                                ((Chest) user.variables.currentBlock.getRelative(BlockFace.EAST).getBlockData()).getFacing() == NORTH &&
+                                ((Chest) user.variables.currentBlock.getRelative(BlockFace.EAST).getBlockData()).getType() == Chest.Type.SINGLE) {
+                            Chest chest = (Chest) user.variables.currentBlock.getRelative(BlockFace.EAST).getBlockData().clone();
+                            if (chest.getFacing() == NORTH && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
+                                chest.setFacing(BlockFace.SOUTH);
                                 Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.EAST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.WEST);
+                                Chest chest2 = (Chest) data.clone();
+                                chest2.setFacing(BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.EAST);
                             } else
                                 data.setType(Chest.Type.SINGLE);
-                        } else if (user.variables.currentBlock.getRelative(BlockFace.EAST).getType() == user.variables.currentBlock.getType()) {
-                            Chest chest = (Chest) user.variables.currentBlock.getRelative(BlockFace.EAST).getBlockData().clone();
-                            if (chest.getFacing() == SOUTH && chest.getType() == Chest.Type.SINGLE) {
+                        } else if (user.variables.currentBlock.getRelative(BlockFace.WEST).getType() == user.variables.currentBlock.getType()) {
+                            Chest chest = (Chest) user.variables.currentBlock.getRelative(BlockFace.WEST).getBlockData().clone();
+                            if (chest.getFacing() == NORTH && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
+                                chest.setFacing(BlockFace.SOUTH);
                                 Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.WEST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.EAST);
+                                Chest chest2 = (Chest) data.clone();
+                                chest2.setFacing(BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.WEST);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
@@ -479,11 +456,8 @@ public class XMirroring implements Mirroring {
                             if (chest.getFacing() == WEST && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
-                                chest.setFacing(BlockFace.EAST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.NORTH);
-                                Chest chest2 = (Chest) data.clone();
-                                chest2.setFacing(BlockFace.WEST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.SOUTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.NORTH);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         } else if (user.variables.currentBlock.getRelative(BlockFace.SOUTH).getType() == user.variables.currentBlock.getType()) {
@@ -491,11 +465,37 @@ public class XMirroring implements Mirroring {
                             if (chest.getFacing() == WEST && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
-                                chest.setFacing(BlockFace.EAST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.SOUTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.SOUTH);
+                            } else
+                                data.setType(Chest.Type.SINGLE);
+                        }
+                        break;
+                    case SOUTH:
+                        if (user.variables.currentBlock.getRelative(BlockFace.WEST).getType() == user.variables.currentBlock.getType() &&
+                                ((Chest) user.variables.currentBlock.getRelative(BlockFace.WEST).getBlockData()).getFacing() == SOUTH &&
+                                ((Chest) user.variables.currentBlock.getRelative(BlockFace.WEST).getBlockData()).getType() == Chest.Type.SINGLE) {
+                            Chest chest = (Chest) user.variables.currentBlock.getRelative(BlockFace.WEST).getBlockData().clone();
+                            if (chest.getFacing() == SOUTH && chest.getType() == Chest.Type.SINGLE) {
+                                chest.setType(Chest.Type.LEFT);
+                                data.setType(Chest.Type.RIGHT);
+                                chest.setFacing(BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.WEST);
                                 Chest chest2 = (Chest) data.clone();
-                                chest2.setFacing(BlockFace.WEST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.SOUTH);
+                                chest2.setFacing(BlockFace.SOUTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.WEST);
+                            } else
+                                data.setType(Chest.Type.SINGLE);
+                        } else if (user.variables.currentBlock.getRelative(BlockFace.EAST).getType() == user.variables.currentBlock.getType()) {
+                            Chest chest = (Chest) user.variables.currentBlock.getRelative(BlockFace.EAST).getBlockData().clone();
+                            if (chest.getFacing() == SOUTH && chest.getType() == Chest.Type.SINGLE) {
+                                chest.setType(Chest.Type.RIGHT);
+                                data.setType(Chest.Type.LEFT);
+                                chest.setFacing(BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.EAST);
+                                Chest chest2 = (Chest) data.clone();
+                                chest2.setFacing(BlockFace.SOUTH);
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.EAST);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
