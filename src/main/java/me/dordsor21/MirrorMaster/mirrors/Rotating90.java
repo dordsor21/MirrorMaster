@@ -1,8 +1,8 @@
-package be.mc.woutwoot.MirrorMaster.mirrors;
+package me.dordsor21.MirrorMaster.mirrors;
 
-import be.mc.woutwoot.MirrorMaster.objects.AdjacentBlock;
-import be.mc.woutwoot.MirrorMaster.objects.User;
-import be.mc.woutwoot.MirrorMaster.util.Functions;
+import me.dordsor21.MirrorMaster.objects.AdjacentBlock;
+import me.dordsor21.MirrorMaster.objects.User;
+import me.dordsor21.MirrorMaster.util.Functions;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -15,7 +15,7 @@ import org.bukkit.block.data.type.*;
 import static org.bukkit.block.BlockFace.*;
 
 @SuppressWarnings("Duplicates")
-public class ZMirroring implements Mirroring {
+public class Rotating90 implements Mirroring {
 
     public void Stairs(User user) {
         Stairs data = (Stairs) user.variables.dataCopy;
@@ -48,7 +48,7 @@ public class ZMirroring implements Mirroring {
                 Block b = user.variables.currentBlock.getRelative(face);
                 Fence fence = (Fence) doFencePane(b, user);
                 fence.setFace(doBlockFace(face).getOppositeFace(), true);
-                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, b.getType(), user, doBlockFace(face));
+                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, b.getType(), user, doBlockFace(face));
             }
     }
 
@@ -65,7 +65,7 @@ public class ZMirroring implements Mirroring {
                 } else if (ab.block.getType() == Material.NETHER_BRICK_FENCE) {
                     data.setFace(doBlockFace(ab.blockFace), true);
                     Fence fence = (Fence) doFencePane(ab.block, user);
-                    Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
                 } else
                     data = (Fence) genericFencePane(data, ab);
             } else if (user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")) {
@@ -76,23 +76,23 @@ public class ZMirroring implements Mirroring {
                     else {
                         data.setFace(doBlockFace(ab.blockFace), true);
                         gate.setInWall(true);
-                        Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, gate, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                        .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, gate, ab.block.getType(), user, doBlockFace(ab.blockFace));
                     }
                 } else if (ab.block.getType().name().toLowerCase().contains("cobblestone_wall")) {
                     data.setFace(doBlockFace(ab.blockFace), true);
                     Fence wall = (Fence) doFencePane(ab.block, user);
-                    Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, wall, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, wall, ab.block.getType(), user, doBlockFace(ab.blockFace));
                 } else
                     data = (Fence) genericFencePane(data, ab);
             } else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("iron_bars")) {
                 if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
                     data.setFace(doBlockFace(ab.blockFace), true);
                     GlassPane pane = (GlassPane) doFencePane(ab.block, user);
-                    Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
                 } else if (ab.block.getType().equals(user.variables.currentBlock.getType())) {
                     data.setFace(doBlockFace(ab.blockFace), true);
                     Fence bars = (Fence) doFencePane(ab.block, user);
-                    Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, bars, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, bars, ab.block.getType(), user, doBlockFace(ab.blockFace));
                 } else
                     data = (Fence) genericFencePane(data, ab);
             } else {
@@ -105,7 +105,7 @@ public class ZMirroring implements Mirroring {
                 } else if (ab.block.getType().name().toLowerCase().contains("fence")) {
                     data.setFace(doBlockFace(ab.blockFace), true);
                     Fence fence = (Fence) doFencePane(ab.block, user);
-                    Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
                 } else {
                     data = (Fence) genericFencePane(data, ab);
                 }
@@ -126,11 +126,11 @@ public class ZMirroring implements Mirroring {
             if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
                 data.setFace(doBlockFace(ab.blockFace), true);
                 GlassPane pane = (GlassPane) doFencePane(ab.block, user);
-                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
             } else if (ab.block.getType().name().equalsIgnoreCase("iron_bars")) {
                 data.setFace(doBlockFace(ab.blockFace), true);
                 Fence bars = (Fence) doFencePane(ab.block, user);
-                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, bars, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, bars, ab.block.getType(), user, doBlockFace(ab.blockFace));
             } else
                 data = (GlassPane) genericFencePane(data, ab);
         Place(data, user);
@@ -150,7 +150,7 @@ public class ZMirroring implements Mirroring {
                         pane.setFace(ab.blockFace, true);
                 } else
                     pane.setFace(doBlockFace(ab.blockFace), false);
-            Functions.PlaceBlock(user.variables.touchingBlock, pane, pane.getMaterial(), user);
+            .Functions.PlaceBlock(user.variables.touchingBlock, pane, pane.getMaterial(), user);
         }
     }
 
@@ -237,7 +237,7 @@ public class ZMirroring implements Mirroring {
         for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
             if (ab.block.getBlockData() instanceof Fence) {
                 Fence fence = (Fence) doFencePane(ab.block, user);
-                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
             }
     }
 
@@ -310,7 +310,7 @@ public class ZMirroring implements Mirroring {
             for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
                 if (ab.block.getBlockData() instanceof Fence) {
                     Fence fence = (Fence) doFencePane(ab.block, user);
-                    Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
                 }
         }
     }
@@ -329,7 +329,7 @@ public class ZMirroring implements Mirroring {
                 datat.setFacing(SOUTH);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datat.setHalf(Bisected.Half.TOP);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
+                .Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
                 break;
             case "north":
                 datab.setFacing(NORTH);
@@ -340,7 +340,7 @@ public class ZMirroring implements Mirroring {
                 datat.setFacing(NORTH);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datat.setHalf(Bisected.Half.TOP);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
+                .Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
                 break;
             case "east":
                 datab.setFacing(WEST);
@@ -351,7 +351,7 @@ public class ZMirroring implements Mirroring {
                 datat.setFacing(WEST);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datat.setHalf(Bisected.Half.TOP);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
+                .Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
                 break;
             case "west":
                 datab.setFacing(EAST);
@@ -362,7 +362,7 @@ public class ZMirroring implements Mirroring {
                 datat.setFacing(EAST);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datat.setHalf(Bisected.Half.TOP);
-                Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
+                .Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
                 break;
         }
     }
@@ -404,8 +404,8 @@ public class ZMirroring implements Mirroring {
                             if (chest.getFacing() == NORTH && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.WEST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.EAST);
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.WEST);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.EAST);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         } else if (user.variables.currentBlock.getRelative(BlockFace.WEST).getType() == user.variables.currentBlock.getType()) {
@@ -413,8 +413,8 @@ public class ZMirroring implements Mirroring {
                             if (chest.getFacing() == NORTH && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.EAST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.WEST);
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.EAST);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.WEST);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
@@ -428,10 +428,10 @@ public class ZMirroring implements Mirroring {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
                                 chest.setFacing(BlockFace.WEST);
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.SOUTH);
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.SOUTH);
                                 Chest chest2 = (Chest) data.clone();
                                 chest2.setFacing(BlockFace.EAST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.SOUTH);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.SOUTH);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         } else if (user.variables.currentBlock.getRelative(BlockFace.NORTH).getType() == user.variables.currentBlock.getType()) {
@@ -440,10 +440,10 @@ public class ZMirroring implements Mirroring {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
                                 chest.setFacing(BlockFace.WEST);
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.NORTH);
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.NORTH);
                                 Chest chest2 = (Chest) data.clone();
                                 chest2.setFacing(BlockFace.EAST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.NORTH);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.NORTH);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
@@ -456,8 +456,8 @@ public class ZMirroring implements Mirroring {
                             if (chest.getFacing() == SOUTH && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.EAST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.WEST);
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.EAST);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.WEST);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         } else if (user.variables.currentBlock.getRelative(BlockFace.EAST).getType() == user.variables.currentBlock.getType()) {
@@ -465,8 +465,8 @@ public class ZMirroring implements Mirroring {
                             if (chest.getFacing() == SOUTH && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.WEST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.EAST);
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.WEST);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.EAST);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
@@ -480,10 +480,10 @@ public class ZMirroring implements Mirroring {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
                                 chest.setFacing(BlockFace.EAST);
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.NORTH);
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.NORTH);
                                 Chest chest2 = (Chest) data.clone();
                                 chest2.setFacing(BlockFace.WEST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.NORTH);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.NORTH);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         } else if (user.variables.currentBlock.getRelative(BlockFace.SOUTH).getType() == user.variables.currentBlock.getType()) {
@@ -492,10 +492,10 @@ public class ZMirroring implements Mirroring {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
                                 chest.setFacing(BlockFace.EAST);
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.SOUTH);
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.SOUTH);
                                 Chest chest2 = (Chest) data.clone();
                                 chest2.setFacing(BlockFace.WEST);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.SOUTH);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.SOUTH);
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
@@ -540,7 +540,7 @@ public class ZMirroring implements Mirroring {
         data2.setHalf(data.getHalf() == Bisected.Half.BOTTOM ? Bisected.Half.TOP : Bisected.Half.BOTTOM);
         Place(data, user);
         int y = user.variables.yDif;
-        Functions.PlaceBlock(-user.variables.xDif, data.getHalf() == Bisected.Half.BOTTOM ? y + 1 : y - 1, user.variables.zDif, data2, user);
+        .Functions.PlaceBlock(-user.variables.xDif, data.getHalf() == Bisected.Half.BOTTOM ? y + 1 : y - 1, user.variables.zDif, data2, user);
     }
 
     public void Terracotta(User user) {
@@ -563,45 +563,53 @@ public class ZMirroring implements Mirroring {
     }
 
     private void Place(BlockData data, User user) {
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data, user);
+        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, data, user);
+        Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, data, user);
+        Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, data, user);
     }
 
     public void Default(User user) {
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, user);
+        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
+        Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
+        Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
         if (user.variables.currentBlock.getType().isSolid())
             for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
                 if (ab.block.getBlockData() instanceof Fence) {
                     Fence fence = (Fence) doFencePane(ab.block, user);
-                    Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
                 } else if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
                     GlassPane pane = (GlassPane) doFencePane(ab.block, user);
-                    Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
                 }
     }
 
     @SuppressWarnings("Duplicates")
     public void Remove(User user) {
-        Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif, user.variables.zDif, user);
+        Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
+        Functions.RemoveBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
+        Functions.RemoveBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
         if (user.variables.currentBlock.getBlockData() instanceof Bisected) {
             Bisected data = (Bisected) user.variables.currentBlock.getBlockData().clone();
             int y = user.variables.yDif;
+            Functions.RemoveBlock(-user.variables.xDif, data.getHalf() == Bisected.Half.BOTTOM ? y + 1 : y - 1, -user.variables.zDif, user);
+            Functions.RemoveBlock(user.variables.xDif, data.getHalf() == Bisected.Half.BOTTOM ? y + 1 : y - 1, -user.variables.zDif, user);
             Functions.RemoveBlock(-user.variables.xDif, data.getHalf() == Bisected.Half.BOTTOM ? y + 1 : y - 1, user.variables.zDif, user);
         }
         for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
             if (ab.block.getBlockData() instanceof Fence) {
                 Fence fence = (Fence) doFencePane(ab.block, user);
                 fence.setFace(doBlockFace(ab.blockFace).getOppositeFace(), false);
-                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
             } else if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
                 GlassPane pane = (GlassPane) doFencePane(ab.block, user);
                 pane.setFace(doBlockFace(ab.blockFace).getOppositeFace(), false);
-                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
             } else if (ab.block.getBlockData() instanceof Gate && user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")) {
                 Gate gate = (Gate) ab.block.getBlockData().clone();
                 if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
                     if (!ab.block.getRelative(ab.blockFace).getType().name().toLowerCase().contains("cobblestone_wall")) {
                         gate.setInWall(false);
-                        Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, gate, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                        .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, gate, ab.block.getType(), user, doBlockFace(ab.blockFace));
                     }
             } else if (ab.block.getBlockData() instanceof Chest && user.variables.currentBlock.getBlockData() instanceof Chest && user.variables.currentBlock.getType() == ab.block.getType()) {
                 Chest data = (Chest) user.variables.currentBlock.getBlockData().clone();
@@ -612,10 +620,10 @@ public class ZMirroring implements Mirroring {
                                 Chest chest = (Chest) ab.block.getBlockData().clone();
                                 chest.setType(Chest.Type.SINGLE);
                                 chest.setFacing(doBlockFace(chest.getFacing()));
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
                                 Chest chest2 = (Chest) user.variables.currentBlock.getRelative(ab.blockFace).getBlockData().clone();
                                 chest2.setType(Chest.Type.SINGLE);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
                             }
                             break;
                         case EAST:
@@ -623,10 +631,10 @@ public class ZMirroring implements Mirroring {
                                 Chest chest = (Chest) ab.block.getBlockData().clone();
                                 chest.setType(Chest.Type.SINGLE);
                                 chest.setFacing(doBlockFace(chest.getFacing()));
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
                                 Chest chest2 = (Chest) user.variables.currentBlock.getRelative(ab.blockFace).getBlockData().clone();
                                 chest2.setType(Chest.Type.SINGLE);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
                             }
                             break;
                         case SOUTH:
@@ -634,10 +642,10 @@ public class ZMirroring implements Mirroring {
                                 Chest chest = (Chest) ab.block.getBlockData().clone();
                                 chest.setType(Chest.Type.SINGLE);
                                 chest.setFacing(doBlockFace(chest.getFacing()));
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
                                 Chest chest2 = (Chest) user.variables.currentBlock.getRelative(ab.blockFace).getBlockData().clone();
                                 chest2.setType(Chest.Type.SINGLE);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
                             }
                             break;
                         case WEST:
@@ -645,13 +653,26 @@ public class ZMirroring implements Mirroring {
                                 Chest chest = (Chest) ab.block.getBlockData().clone();
                                 chest.setType(Chest.Type.SINGLE);
                                 chest.setFacing(doBlockFace(chest.getFacing()));
-                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
                                 Chest chest2 = (Chest) user.variables.currentBlock.getRelative(ab.blockFace).getBlockData().clone();
                                 chest2.setType(Chest.Type.SINGLE);
-                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
+                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
                             }
                             break;
                     }
             }
     }
+/*
+
+    void Default(User user) {
+        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
+        Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
+        Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
+    }
+
+    void Remove(User user) {
+        Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
+        Functions.RemoveBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
+        Functions.RemoveBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
+    }*/
 }

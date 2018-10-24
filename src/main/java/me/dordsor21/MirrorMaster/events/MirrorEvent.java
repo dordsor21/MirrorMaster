@@ -1,6 +1,6 @@
-package be.mc.woutwoot.MirrorMaster.events;
+package me.dordsor21.MirrorMaster.events;
 
-import be.mc.woutwoot.MirrorMaster.objects.User;
+import me.dordsor21.MirrorMaster.objects.User;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

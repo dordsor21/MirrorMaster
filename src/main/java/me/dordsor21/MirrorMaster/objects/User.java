@@ -1,4 +1,4 @@
-package be.mc.woutwoot.MirrorMaster.objects;
+package me.dordsor21.MirrorMaster.objects;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;

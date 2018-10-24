@@ -1,4 +1,4 @@
-package be.mc.woutwoot.MirrorMaster.mirrors;
+package me.dordsor21.MirrorMaster.mirrors;
 
 public class Rotating180 {
 

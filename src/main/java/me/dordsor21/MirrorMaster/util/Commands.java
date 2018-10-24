@@ -1,7 +1,7 @@
-package be.mc.woutwoot.MirrorMaster.util;
+package me.dordsor21.MirrorMaster.util;
 
-import be.mc.woutwoot.MirrorMaster.objects.Mirrors;
-import be.mc.woutwoot.MirrorMaster.objects.User;
+import me.dordsor21.MirrorMaster.objects.Mirrors;
+import me.dordsor21.MirrorMaster.objects.User;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 

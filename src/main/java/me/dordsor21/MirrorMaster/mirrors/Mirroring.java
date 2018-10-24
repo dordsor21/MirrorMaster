@@ -1,6 +1,6 @@
-package be.mc.woutwoot.MirrorMaster.mirrors;
+package me.dordsor21.MirrorMaster.mirrors;
 
-import be.mc.woutwoot.MirrorMaster.objects.User;
+import me.dordsor21.MirrorMaster.objects.User;
 
 public interface Mirroring {
 

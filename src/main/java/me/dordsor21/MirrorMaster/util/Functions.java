@@ -1,9 +1,9 @@
-package be.mc.woutwoot.MirrorMaster.util;
+package me.dordsor21.MirrorMaster.util;
 
-import be.mc.woutwoot.MirrorMaster.MirrorMaster;
-import be.mc.woutwoot.MirrorMaster.mirrors.Mirroring;
-import be.mc.woutwoot.MirrorMaster.objects.AdjacentBlock;
-import be.mc.woutwoot.MirrorMaster.objects.User;
+import me.dordsor21.MirrorMaster.MirrorMaster;
+import me.dordsor21.MirrorMaster.mirrors.Mirroring;
+import me.dordsor21.MirrorMaster.objects.AdjacentBlock;
+import me.dordsor21.MirrorMaster.objects.User;
 import com.intellectualcrafters.plot.config.C;
 import com.intellectualcrafters.plot.config.Settings;
 import com.intellectualcrafters.plot.flag.Flags;

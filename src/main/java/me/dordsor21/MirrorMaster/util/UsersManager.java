@@ -1,6 +1,6 @@
-package be.mc.woutwoot.MirrorMaster.util;
+package me.dordsor21.MirrorMaster.util;
 
-import be.mc.woutwoot.MirrorMaster.objects.User;
+import me.dordsor21.MirrorMaster.objects.User;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
