@@ -1,46 +1,44 @@
 package me.dordsor21.MirrorMaster.mirrors;
 
-import me.dordsor21.MirrorMaster.objects.User;
-
 public interface Mirroring {
 
-    void Stairs(User user);
+    void Stairs();
 
-    void ButtonLevers(User user);
+    void ButtonLevers();
 
-    void Torches(User user);
+    void Torches();
 
-    void Halfslabs(User user);
+    void Halfslabs();
 
-    void Doors(User user);
+    void Doors();
 
-    void Fences(User user);
+    void Fences();
 
-    void Gates(User user);
+    void Gates();
 
-    void Trapdoors(User user);
+    void Trapdoors();
 
-    void Pistons(User user);
+    void Pistons();
 
-    void EndRods(User user);
+    void EndRods();
 
-    void Chests(User user);
+    void Chests();
 
-    void RotateXZ(User user);
+    void RotateXZ();
 
-    void Vines(User user);
+    void Vines();
 
-    void GlassPanes(User user);
+    void GlassPanes();
 
-    void TripWire(User user);
+    void TripWire();
 
-    void Hopper(User user);
+    void Hopper();
 
-    void TallFlower(User user);
+    void TallFlower();
 
-    void Terracotta(User user);
+    void Terracotta();
 
-    void Default(User user);
+    void Default();
 
-    void Remove(User user);
+    void Remove();
 }

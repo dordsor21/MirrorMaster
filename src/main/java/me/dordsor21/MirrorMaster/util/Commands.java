@@ -1,5 +1,9 @@
 package me.dordsor21.MirrorMaster.util;
 
+import me.dordsor21.MirrorMaster.mirrors.Rotating180;
+import me.dordsor21.MirrorMaster.mirrors.Rotating90;
+import me.dordsor21.MirrorMaster.mirrors.XMirroring;
+import me.dordsor21.MirrorMaster.mirrors.ZMirroring;
 import me.dordsor21.MirrorMaster.objects.Mirrors;
 import me.dordsor21.MirrorMaster.objects.User;
 import org.bukkit.Material;
@@ -65,6 +69,7 @@ public class Commands {
         user.player.sendMessage("Mirroring on x-axis! Use '/mm stop' to stop Mirrors.");
 
         user.mirror(Mirrors.XMirroring);
+        user.mirrorClass(new XMirroring(user));
         UsersManager.Set(user);
     }
 
@@ -78,6 +83,7 @@ public class Commands {
         user.player.sendMessage("Mirroring on z-axis! Use '/mm stop' to stop Mirrors.");
 
         user.mirror(Mirrors.ZMirroring);
+        user.mirrorClass(new ZMirroring(user));
         UsersManager.Set(user);
     }
 
@@ -106,6 +112,7 @@ public class Commands {
         user.player.sendMessage("Rotating 180 degrees! Use '/mm stop' to stop rotating.");
 
         user.mirror(Mirrors.Rotating180);
+        user.mirrorClass(new Rotating180(user));
         UsersManager.Set(user);
     }
 
@@ -119,6 +126,7 @@ public class Commands {
         user.player.sendMessage("Rotating 90 degrees! Use '/mm stop' to stop rotating.");
 
         user.mirror(Mirrors.Rotating90);
+        user.mirrorClass(new Rotating90(user));
         UsersManager.Set(user);
     }
 

@@ -127,7 +127,6 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                             user.variables(variables);
-//                        Functions.Mirror(user, crossMirroring);
                             break;
 
                         case XMirroring:
@@ -139,7 +138,6 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                             user.variables(variables);
-                            Functions.Mirror(user, new XMirroring());
                             break;
 
                         case ZMirroring:
@@ -151,7 +149,6 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                             user.variables(variables);
-                            Functions.Mirror(user, new ZMirroring());
                             break;
 
                         case Rotating180:
@@ -160,18 +157,19 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                             user.variables(variables);
-//                        Functions.Mirror(user, rotating90);
                             break;
 
                         case Rotating90:
                             variables.xDif = user.variables.currentBlock.getX() - user.mirrorPoint.getX();
                             variables.yDif = user.variables.currentBlock.getY();
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
+                            variables.isZ90 = (user.variables.currentBlock.getX() > user.mirrorPoint.getX() && user.variables.currentBlock.getZ() > user.mirrorPoint.getZ()) ||
+                                    (user.variables.currentBlock.getX() < user.mirrorPoint.getX() && user.variables.currentBlock.getZ() < user.mirrorPoint.getZ());
 
                             user.variables(variables);
-                            Functions.Mirror(user, new Rotating90());
-
                     }
+
+                    Functions.Mirror(user);
                 }
             }
         }
@@ -214,7 +212,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                             user.variables(variables);
-                            (new XMirroring()).Remove(user);
+                            (new XMirroring(user)).Remove();
                             break;
 
                         case ZMirroring:
@@ -223,7 +221,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                             user.variables(variables);
-                            (new ZMirroring()).Remove(user);
+                            (new ZMirroring(user)).Remove();
                             break;
 
                         case Rotating180:
@@ -241,7 +239,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                             user.variables(variables);
-                            (new Rotating90()).Remove(user);
+                            (new Rotating90(user)).Remove();
                     }
                 }
             }

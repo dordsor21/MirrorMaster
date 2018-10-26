@@ -1,15 +1,15 @@
 package me.dordsor21.MirrorMaster.util;
 
-import me.dordsor21.MirrorMaster.MirrorMaster;
-import me.dordsor21.MirrorMaster.mirrors.Mirroring;
-import me.dordsor21.MirrorMaster.objects.AdjacentBlock;
-import me.dordsor21.MirrorMaster.objects.User;
 import com.intellectualcrafters.plot.config.C;
 import com.intellectualcrafters.plot.config.Settings;
 import com.intellectualcrafters.plot.flag.Flags;
 import com.intellectualcrafters.plot.object.Plot;
 import com.intellectualcrafters.plot.object.PlotPlayer;
 import com.intellectualcrafters.plot.util.Permissions;
+import me.dordsor21.MirrorMaster.MirrorMaster;
+import me.dordsor21.MirrorMaster.mirrors.Mirroring;
+import me.dordsor21.MirrorMaster.objects.AdjacentBlock;
+import me.dordsor21.MirrorMaster.objects.User;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -137,48 +137,49 @@ public class Functions {
         return true;
     }
 
-    public static void Mirror(User user, Mirroring mirroring) {
+    public static void Mirror(User user) {
+        Mirroring mirroring = user.mirrorClass;
         String block = user.variables.currentBlock.getType().name().toLowerCase();
         if (block.contains("stairs"))
-            mirroring.Stairs(user);
+            mirroring.Stairs();
         else if (block.equalsIgnoreCase("lever") || block.contains("button"))
-            mirroring.ButtonLevers(user);
+            mirroring.ButtonLevers();
         else if (block.contains("torch"))
-            mirroring.Torches(user);
+            mirroring.Torches();
         else if (block.contains("slab"))
-            mirroring.Halfslabs(user);
+            mirroring.Halfslabs();
         else if (block.contains("_door"))
-            mirroring.Doors(user);
+            mirroring.Doors();
         else if (block.contains("gate"))
-            mirroring.Gates(user);
+            mirroring.Gates();
         else if (block.contains("fence") || block.contains("cobblestone_wall") || block.equalsIgnoreCase("iron_bars"))
-            mirroring.Fences(user);
+            mirroring.Fences();
         else if (block.contains("trapdoor"))
-            mirroring.Trapdoors(user);
+            mirroring.Trapdoors();
         else if (block.contains("piston"))
-            mirroring.Pistons(user);
+            mirroring.Pistons();
         else if (block.equalsIgnoreCase("end_rod"))
-            mirroring.EndRods(user);
+            mirroring.EndRods();
         else if (block.endsWith("chest"))
-            mirroring.Chests(user);
+            mirroring.Chests();
         else if (block.equalsIgnoreCase("ladder") || block.equalsIgnoreCase("carved_pumpkin") || block.equalsIgnoreCase("jack_o_lantern") || block.equalsIgnoreCase("observer") ||
                 block.equalsIgnoreCase("dispenser") || block.equalsIgnoreCase("dropper") || block.equalsIgnoreCase("comparator") || block.equalsIgnoreCase("repeater"))
-            mirroring.RotateXZ(user);
+            mirroring.RotateXZ();
         else if (block.equalsIgnoreCase("vine"))
-            mirroring.Vines(user);
+            mirroring.Vines();
         else if (block.contains("glass_pane"))
-            mirroring.GlassPanes(user);
+            mirroring.GlassPanes();
         else if (block.equalsIgnoreCase("tripwire_hook"))
-            mirroring.TripWire(user);
+            mirroring.TripWire();
         else if (block.equalsIgnoreCase("hopper"))
-            mirroring.Hopper(user);
+            mirroring.Hopper();
         else if (block.equalsIgnoreCase("sunflower") || block.equalsIgnoreCase("lilac") || block.equalsIgnoreCase("rose_bush") || block.equalsIgnoreCase("peony") ||
                 block.equalsIgnoreCase("tall_grass") || block.equalsIgnoreCase("large_fern"))
-            mirroring.TallFlower(user);
+            mirroring.TallFlower();
         else if (block.contains("terracotta"))
-            mirroring.Terracotta(user);
+            mirroring.Terracotta();
         else
-            mirroring.Default(user);
+            mirroring.Default();
     }
 
     public static AdjacentBlock[] getRelatives(Block b) {

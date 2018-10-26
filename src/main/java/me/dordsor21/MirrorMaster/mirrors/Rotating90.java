@@ -1,145 +1,228 @@
 package me.dordsor21.MirrorMaster.mirrors;
 
-import me.dordsor21.MirrorMaster.objects.AdjacentBlock;
-import me.dordsor21.MirrorMaster.objects.User;
-import me.dordsor21.MirrorMaster.util.Functions;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.Bisected;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.MultipleFacing;
-import org.bukkit.block.data.type.*;
+        import me.dordsor21.MirrorMaster.objects.AdjacentBlock;
+        import me.dordsor21.MirrorMaster.objects.User;
+        import me.dordsor21.MirrorMaster.util.Functions;
+        import org.bukkit.Material;
+        import org.bukkit.block.Block;
+        import org.bukkit.block.BlockFace;
+        import org.bukkit.block.data.Bisected;
+        import org.bukkit.block.data.BlockData;
+        import org.bukkit.block.data.Directional;
+        import org.bukkit.block.data.MultipleFacing;
+        import org.bukkit.block.data.type.*;
 
-import static org.bukkit.block.BlockFace.*;
+        import java.util.Arrays;
+
+        import static org.bukkit.block.BlockFace.*;
 
 @SuppressWarnings("Duplicates")
 public class Rotating90 implements Mirroring {
 
-    public void Stairs(User user) {
-        Stairs data = (Stairs) user.variables.dataCopy;
+    private User user;
+
+    public Rotating90(User user) {
+        this.user = user;
+    }
+
+    public void Stairs() {
+        Stairs data = (Stairs) user.variables.dataCopy.clone();
         data.setHalf(Bisected.Half.BOTTOM);
         if (Functions.Down(user))
             data.setHalf(Bisected.Half.TOP);
         String shape = data.getShape().name();
+        Stairs data90 = (Stairs) data.clone();
+        Stairs data180 = (Stairs) data.clone();
+        Stairs data270 = (Stairs) data.clone();
         data.setShape(Stairs.Shape.valueOf(shape.contains("LEFT") ? shape.replace("LEFT", "RIGHT") : shape.replace("RIGHT", "LEFT")));
         switch (Functions.LookDirection(user)) {
             case "south":
-                data.setFacing(SOUTH);
-                Place(data, user);
+                data90.setFacing(WEST);
+                data180.setFacing(NORTH);
+                data270.setFacing(EAST);
                 break;
             case "north":
-                data.setFacing(NORTH);
-                Place(data, user);
+                data90.setFacing(EAST);
+                data180.setFacing(SOUTH);
+                data270.setFacing(WEST);
                 break;
             case "east":
-                data.setFacing(WEST);
-                Place(data, user);
+                data90.setFacing(SOUTH);
+                data180.setFacing(WEST);
+                data270.setFacing(NORTH);
                 break;
             case "west":
-                data.setFacing(EAST);
-                Place(data, user);
+                data90.setFacing(NORTH);
+                data180.setFacing(EAST);
+                data270.setFacing(SOUTH);
                 break;
         }
+        Place(data90, data180, data270);
 
         for (BlockFace face : data.getFaces())
             if (user.variables.currentBlock.getRelative(face).getBlockData() instanceof Fence) {
                 Block b = user.variables.currentBlock.getRelative(face);
-                Fence fence = (Fence) doFencePane(b, user);
-                fence.setFace(doBlockFace(face).getOppositeFace(), true);
-                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, b.getType(), user, doBlockFace(face));
+                Fence[] fence = Arrays.copyOf(doFencePane(b), 3, Fence[].class);
+                fence[0].setFace(doBlockFace(face, 1).getOppositeFace(), true);
+                fence[1].setFace(doBlockFace(face, 2).getOppositeFace(), true);
+                fence[2].setFace(doBlockFace(face, 3).getOppositeFace(), true);
+                PlaceRelatives(fence[0], fence[1], fence[2], face, b.getType());
             }
     }
 
-    public void Fences(User user) {
-        Fence data = (Fence) user.variables.dataCopy;
+    public void Fences() {
+        Fence data90 = (Fence) user.variables.dataCopy.clone();
+        Fence data180 = (Fence) user.variables.dataCopy.clone();
+        Fence data270 = (Fence) user.variables.dataCopy.clone();
         for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock)) {
             if (user.variables.currentBlock.getType() == Material.NETHER_BRICK_FENCE) {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
-                    else
-                        data.setFace(doBlockFace(ab.blockFace), false);
+                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace)) {
+                        data90.setFace(doBlockFace(ab.blockFace, 1), true);
+                        data180.setFace(doBlockFace(ab.blockFace, 2), true);
+                        data270.setFace(doBlockFace(ab.blockFace, 3), true);
+                    } else {
+                        data90.setFace(doBlockFace(ab.blockFace, 1), false);
+                        data180.setFace(doBlockFace(ab.blockFace, 2), false);
+                        data270.setFace(doBlockFace(ab.blockFace, 3), false);
+                    }
                 } else if (ab.block.getType() == Material.NETHER_BRICK_FENCE) {
-                    data.setFace(doBlockFace(ab.blockFace), true);
-                    Fence fence = (Fence) doFencePane(ab.block, user);
-                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
-                } else
-                    data = (Fence) genericFencePane(data, ab);
+                    data90.setFace(doBlockFace(ab.blockFace, 1), true);
+                    data180.setFace(doBlockFace(ab.blockFace, 2), true);
+                    data270.setFace(doBlockFace(ab.blockFace, 3), true);
+                    Fence[] fence = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+
+                    PlaceRelatives(fence[0], fence[1], fence[2], ab.blockFace, ab.block.getType());
+                } else {
+                    data90 = (Fence) genericFencePane(data90, ab, 1);
+                    data180 = (Fence) genericFencePane(data180, ab, 2);
+                    data270 = (Fence) genericFencePane(data270, ab, 3);
+                }
             } else if (user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")) {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if ((gate.getFacing() == ab.blockFace || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), false);
-                    else {
-                        data.setFace(doBlockFace(ab.blockFace), true);
+                    if ((gate.getFacing() == ab.blockFace || gate.getFacing().getOppositeFace() == ab.blockFace)) {
+                        data90.setFace(doBlockFace(ab.blockFace, 1), false);
+                        data180.setFace(doBlockFace(ab.blockFace, 2), false);
+                        data270.setFace(doBlockFace(ab.blockFace, 3), false);
+                    } else {
+                        data90.setFace(doBlockFace(ab.blockFace, 1), true);
+                        data180.setFace(doBlockFace(ab.blockFace, 2), true);
+                        data270.setFace(doBlockFace(ab.blockFace, 3), true);
+
                         gate.setInWall(true);
-                        .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, gate, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                        Gate gate90 = ((Gate) gate.clone());
+                        Gate gate270 = ((Gate) gate.clone());
+                        gate90.setFacing(doBlockFace(gate.getFacing(), 1));
+                        gate270.setFacing(doBlockFace(gate.getFacing(), 1));
+
+                        PlaceRelatives(gate90, gate, gate270, ab.blockFace, ab.block.getType());
                     }
                 } else if (ab.block.getType().name().toLowerCase().contains("cobblestone_wall")) {
-                    data.setFace(doBlockFace(ab.blockFace), true);
-                    Fence wall = (Fence) doFencePane(ab.block, user);
-                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, wall, ab.block.getType(), user, doBlockFace(ab.blockFace));
-                } else
-                    data = (Fence) genericFencePane(data, ab);
+                    data90.setFace(doBlockFace(ab.blockFace, 1), true);
+                    data180.setFace(doBlockFace(ab.blockFace, 2), true);
+                    data270.setFace(doBlockFace(ab.blockFace, 3), true);
+
+                    Fence wall[] = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+
+                    PlaceRelatives(wall[0], wall[1], wall[2], ab.blockFace, ab.block.getType());
+                } else {
+                    data90 = (Fence) genericFencePane(data90, ab, 1);
+                    data180 = (Fence) genericFencePane(data180, ab, 2);
+                    data270 = (Fence) genericFencePane(data270, ab, 3);
+                }
             } else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("iron_bars")) {
                 if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
-                    data.setFace(doBlockFace(ab.blockFace), true);
-                    GlassPane pane = (GlassPane) doFencePane(ab.block, user);
-                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    data90.setFace(doBlockFace(ab.blockFace, 1), true);
+                    data180.setFace(doBlockFace(ab.blockFace, 2), true);
+                    data270.setFace(doBlockFace(ab.blockFace, 3), true);
+
+                    GlassPane[] pane = Arrays.copyOf(doFencePane(ab.block), 3, GlassPane[].class);
+                    PlaceRelatives(pane[0], pane[1], pane[2], ab.blockFace, ab.block.getType());
                 } else if (ab.block.getType().equals(user.variables.currentBlock.getType())) {
-                    data.setFace(doBlockFace(ab.blockFace), true);
-                    Fence bars = (Fence) doFencePane(ab.block, user);
-                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, bars, ab.block.getType(), user, doBlockFace(ab.blockFace));
-                } else
-                    data = (Fence) genericFencePane(data, ab);
+                    data90.setFace(doBlockFace(ab.blockFace, 1), true);
+                    data180.setFace(doBlockFace(ab.blockFace, 2), true);
+                    data270.setFace(doBlockFace(ab.blockFace, 3), true);
+
+                    Fence[] bars = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+                    PlaceRelatives(bars[0], bars[1], bars[2], ab.blockFace, ab.block.getType());
+                } else {
+                    data90 = (Fence) genericFencePane(data90, ab, 1);
+                    data180 = (Fence) genericFencePane(data180, ab, 2);
+                    data270 = (Fence) genericFencePane(data270, ab, 3);
+                }
             } else {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
-                    else
-                        data.setFace(doBlockFace(ab.blockFace), false);
+                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace)) {
+                        data90.setFace(doBlockFace(ab.blockFace, 1), true);
+                        data180.setFace(doBlockFace(ab.blockFace, 2), true);
+                        data270.setFace(doBlockFace(ab.blockFace, 3), true);
+                    } else {
+                        data90.setFace(doBlockFace(ab.blockFace, 1), false);
+                        data180.setFace(doBlockFace(ab.blockFace, 2), false);
+                        data270.setFace(doBlockFace(ab.blockFace, 3), false);
+                    }
                 } else if (ab.block.getType().name().toLowerCase().contains("fence")) {
-                    data.setFace(doBlockFace(ab.blockFace), true);
-                    Fence fence = (Fence) doFencePane(ab.block, user);
-                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    data90.setFace(doBlockFace(ab.blockFace, 1), true);
+                    data180.setFace(doBlockFace(ab.blockFace, 2), true);
+                    data270.setFace(doBlockFace(ab.blockFace, 3), true);
+
+                    Fence[] fence = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+                    PlaceRelatives(fence[0], fence[1], fence[2], ab.blockFace, ab.block.getType());
                 } else {
-                    data = (Fence) genericFencePane(data, ab);
+                    data90 = (Fence) genericFencePane(data90, ab, 1);
+                    data180 = (Fence) genericFencePane(data180, ab, 2);
+                    data270 = (Fence) genericFencePane(data270, ab, 3);
                 }
             }
         }
-        if (data.getMaterial().name().toLowerCase().contains("cobblestone_wall"))
+        if (user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")) {
+            Fence data = (Fence) user.variables.dataCopy;
             if ((data.getFaces().contains(EAST) && data.getFaces().contains(WEST)) && !(data.getFaces().contains(NORTH) || data.getFaces().contains(SOUTH))
-                    || !(data.getFaces().contains(EAST) || data.getFaces().contains(WEST)) && (data.getFaces().contains(NORTH) && data.getFaces().contains(SOUTH)))
-                data.setFace(UP, false);
-            else
-                data.setFace(UP, true);
-        Place(data, user);
+                    || !(data.getFaces().contains(EAST) || data.getFaces().contains(WEST)) && (data.getFaces().contains(NORTH) && data.getFaces().contains(SOUTH))) {
+                data90.setFace(UP, false);
+                data180.setFace(UP, false);
+                data270.setFace(UP, false);
+            } else {
+                data90.setFace(UP, true);
+                data180.setFace(UP, true);
+                data270.setFace(UP, true);
+            }
+        }
+        Place(data90, data180, data270);
     }
 
-    public void GlassPanes(User user) {
-        GlassPane data = (GlassPane) user.variables.dataCopy.clone();
+    public void GlassPanes() {
+        GlassPane data90 = (GlassPane) user.variables.dataCopy.clone();
+        GlassPane data180 = (GlassPane) user.variables.dataCopy.clone();
+        GlassPane data270 = (GlassPane) user.variables.dataCopy.clone();
         for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
             if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
-                data.setFace(doBlockFace(ab.blockFace), true);
-                GlassPane pane = (GlassPane) doFencePane(ab.block, user);
-                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                data90.setFace(doBlockFace(ab.blockFace, 1), true);
+                data180.setFace(doBlockFace(ab.blockFace, 2), true);
+                data270.setFace(doBlockFace(ab.blockFace, 3), true);
+                GlassPane[] pane = Arrays.copyOf(doFencePane(ab.block), 3, GlassPane[].class);
+                PlaceRelatives(pane[0], pane[1], pane[2], ab.blockFace, ab.block.getType());
             } else if (ab.block.getType().name().equalsIgnoreCase("iron_bars")) {
-                data.setFace(doBlockFace(ab.blockFace), true);
-                Fence bars = (Fence) doFencePane(ab.block, user);
-                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, bars, ab.block.getType(), user, doBlockFace(ab.blockFace));
-            } else
-                data = (GlassPane) genericFencePane(data, ab);
-        Place(data, user);
+                data90.setFace(doBlockFace(ab.blockFace, 1), true);
+                data180.setFace(doBlockFace(ab.blockFace, 2), true);
+                data270.setFace(doBlockFace(ab.blockFace, 3), true);
+                Fence[] bars = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+                PlaceRelatives(bars[0], bars[1], bars[2], ab.blockFace, ab.block.getType());
+            } else {
+                data90 = (GlassPane) genericFencePane(data90, ab, 1);
+                data180 = (GlassPane) genericFencePane(data180, ab, 2);
+                data270 = (GlassPane) genericFencePane(data270, ab, 3);
+            }
+        Place(data90, data180, data270);
         if (user.variables.touchingBlock.getType().name().toLowerCase().contains("glass_pane")) {
             GlassPane pane = (GlassPane) user.variables.touchingBlock.getBlockData().clone();
             for (AdjacentBlock ab : Functions.getRelatives(user.variables.touchingBlock))
-                if (ab.block.getType().name().toLowerCase().contains("glass_pane"))
+                if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
                     pane.setFace(ab.blockFace, true);
-                else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("iron_bars"))
+                } else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("iron_bars"))
                     pane.setFace(ab.blockFace, true);
                 else if (ab.block.getType().isSolid() && ab.block.getType().isOccluding())
                     pane.setFace(ab.blockFace, true);
@@ -149,247 +232,355 @@ public class Rotating90 implements Mirroring {
                     if (((Stairs) ab.block.getBlockData()).getFacing().getOppositeFace() == ab.blockFace)
                         pane.setFace(ab.blockFace, true);
                 } else
-                    pane.setFace(doBlockFace(ab.blockFace), false);
-            .Functions.PlaceBlock(user.variables.touchingBlock, pane, pane.getMaterial(), user);
+                    pane.setFace(ab.blockFace, false);
+            Functions.PlaceBlock(user.variables.touchingBlock, pane, pane.getMaterial(), user);
         }
     }
 
-    private MultipleFacing doFencePane(Block b, User user) {
-        MultipleFacing data = (MultipleFacing) b.getBlockData().clone();
-        for (AdjacentBlock ab : Functions.getRelatives(b)) {
-            if ((ab.block.getType() == Material.AIR || ab.block == user.variables.currentBlock) && !user.variables.placing) {
-                data.setFace(doBlockFace(ab.blockFace), false);
-                continue;
-            }
-            if (b.getType() == Material.NETHER_BRICK_FENCE) {
-                if (ab.block.getType().name().toLowerCase().contains("gate")) {
-                    Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
+    private MultipleFacing[] doFencePane(Block b) {
+        MultipleFacing[] data = new MultipleFacing[]{(MultipleFacing) b.getBlockData().clone(), (MultipleFacing) b.getBlockData().clone(), (MultipleFacing) b.getBlockData().clone()};
+        MultipleFacing datat = (MultipleFacing) b.getBlockData().clone();
+        for (int i = 1; i <= 3; i++) {
+            for (AdjacentBlock ab : Functions.getRelatives(b)) {
+                if ((ab.block.getType() == Material.AIR || ab.block == user.variables.currentBlock) && !user.variables.placing) {
+                    data[i - 1].setFace(doBlockFace(ab.blockFace, i), false);
+                    continue;
+                }
+                if (b.getType() == Material.NETHER_BRICK_FENCE) {
+                    if (ab.block.getType().name().toLowerCase().contains("gate")) {
+                        Gate gate = (Gate) ab.block.getBlockData().clone();
+                        if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
+                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
+                        else
+                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), false);
+                    } else if (ab.block.getType() == Material.NETHER_BRICK_FENCE)
+                        data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
                     else
-                        data.setFace(doBlockFace(ab.blockFace), false);
-                } else if (ab.block.getType() == Material.NETHER_BRICK_FENCE)
-                    data.setFace(doBlockFace(ab.blockFace), true);
-                else
-                    data = genericFencePane(data, ab);
-            } else if (b.getType().name().toLowerCase().contains("cobblestone_wall")) {
-                if (ab.block.getType().name().toLowerCase().contains("cobblestone_wall"))
-                    data.setFace(doBlockFace(ab.blockFace), true);
-                else if (ab.block.getType().name().toLowerCase().contains("gate")) {
-                    Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
+                        data[i - 1] = genericFencePane(data[i - 1], ab, i);
+                } else if (b.getType().name().toLowerCase().contains("cobblestone_wall")) {
+                    if (ab.block.getType().name().toLowerCase().contains("cobblestone_wall"))
+                        data[i - 1].setFace(doBlockFace(ab.blockFace, 1), true);
+                    else if (ab.block.getType().name().toLowerCase().contains("gate")) {
+                        Gate gate = (Gate) ab.block.getBlockData().clone();
+                        if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace)) {
+                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
+                        } else {
+                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), false);
+                        }
+                    } else
+                        data[i - 1] = genericFencePane(data[i - 1], ab, i);
+                    if (((datat.getFaces().contains(EAST) && datat.getFaces().contains(WEST)) && !(datat.getFaces().contains(NORTH) || datat.getFaces().contains(SOUTH)))
+                            || (!(datat.getFaces().contains(EAST) || datat.getFaces().contains(WEST)) && (datat.getFaces().contains(NORTH) && datat.getFaces().contains(SOUTH))))
+                        data[i - 1].setFace(UP, false);
                     else
-                        data.setFace(doBlockFace(ab.blockFace), false);
-                } else
-                    data = genericFencePane(data, ab);
-                if (((data.getFaces().contains(EAST) && data.getFaces().contains(WEST)) && !(data.getFaces().contains(NORTH) || data.getFaces().contains(SOUTH)))
-                        || (!(data.getFaces().contains(EAST) || data.getFaces().contains(WEST)) && (data.getFaces().contains(NORTH) && data.getFaces().contains(SOUTH))))
-                    data.setFace(UP, false);
-                else
-                    data.setFace(UP, true);
-            } else if (b.getType().name().equalsIgnoreCase("iron_bars") || b.getType().name().toLowerCase().contains("glass_pane")) {
-                if (ab.block.getType().name().equalsIgnoreCase("iron_bars") || ab.block.getType().name().toLowerCase().contains("glass_pane"))
-                    data.setFace(doBlockFace(ab.blockFace), true);
-                else
-                    data = genericFencePane(data, ab);
-            } else {
-                if (ab.block.getType().name().toLowerCase().contains("gate")) {
-                    Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
+                        data[i - 1].setFace(UP, true);
+                } else if (b.getType().name().equalsIgnoreCase("iron_bars") || b.getType().name().toLowerCase().contains("glass_pane")) {
+                    if (ab.block.getType().name().equalsIgnoreCase("iron_bars") || ab.block.getType().name().toLowerCase().contains("glass_pane"))
+                        data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
                     else
-                        data.setFace(doBlockFace(ab.blockFace), false);
-                } else if (ab.block.getType().name().toLowerCase().contains("fence"))
-                    data.setFace(doBlockFace(ab.blockFace), true);
-                else
-                    data = genericFencePane(data, ab);
+                        data[i - 1] = genericFencePane(data[i - 1], ab, i);
+                } else {
+                    if (ab.block.getType().name().toLowerCase().contains("gate")) {
+                        Gate gate = (Gate) ab.block.getBlockData().clone();
+                        if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
+                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
+                        else
+                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), false);
+                    } else if (ab.block.getType().name().toLowerCase().contains("fence"))
+                        data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
+                    else
+                        data[i - 1] = genericFencePane(data[i - 1], ab, i);
+                }
             }
         }
         return data;
     }
 
-    private BlockFace doBlockFace(BlockFace bf) {
-        if (bf != EAST && bf != WEST)
-            return bf;
-        return bf == EAST ? WEST : EAST;
+    private BlockFace doBlockFace(BlockFace bf, int i) {
+        switch (i) {
+            case 1:
+                switch (bf) {
+                    case NORTH:
+                        return EAST;
+                    case EAST:
+                        return SOUTH;
+                    case SOUTH:
+                        return WEST;
+                    case WEST:
+                        return NORTH;
+                }
+            case 2:
+                switch (bf) {
+                    case NORTH:
+                        return SOUTH;
+                    case EAST:
+                        return WEST;
+                    case SOUTH:
+                        return NORTH;
+                    case WEST:
+                        return EAST;
+                }
+            case 3:
+                switch (bf) {
+                    case NORTH:
+                        return WEST;
+                    case EAST:
+                        return NORTH;
+                    case SOUTH:
+                        return EAST;
+                    case WEST:
+                        return SOUTH;
+                }
+        }
+        return bf;
     }
 
-    private MultipleFacing genericFencePane(MultipleFacing data, AdjacentBlock ab) {
+    private MultipleFacing genericFencePane(MultipleFacing data, AdjacentBlock ab, int i) {
         if (ab.block.getType().isSolid() && ab.block.getType().isOccluding())
-            data.setFace(doBlockFace(ab.blockFace), true);
+            data.setFace(doBlockFace(ab.blockFace, i), true);
         else if (ab.block.getBlockData() instanceof Slab && ((Slab) ab.block.getBlockData()).getType() == Slab.Type.DOUBLE)
-            data.setFace(doBlockFace(ab.blockFace), true);
+            data.setFace(doBlockFace(ab.blockFace, i), true);
         else if (ab.block.getBlockData() instanceof Stairs) {
             if (((Stairs) ab.block.getBlockData()).getFacing().getOppositeFace() == ab.blockFace)
-                data.setFace(doBlockFace(ab.blockFace), true);
+                data.setFace(doBlockFace(ab.blockFace, i), true);
             else
-                data.setFace(doBlockFace(ab.blockFace), false);
+                data.setFace(doBlockFace(ab.blockFace, i), false);
         } else
-            data.setFace(doBlockFace(ab.blockFace), false);
+            data.setFace(doBlockFace(ab.blockFace, i), false);
         return data;
     }
 
-    public void Gates(User user) {
-        Gate data = (Gate) user.variables.dataCopy;
-        data.setFacing(doBlockFace(data.getFacing()));
-        Place(data, user);
+    public void Gates() {
+        Gate data90 = (Gate) user.variables.dataCopy.clone();
+        Gate data180 = (Gate) user.variables.dataCopy.clone();
+        Gate data270 = (Gate) user.variables.dataCopy.clone();
+        data90.setFacing(doBlockFace(data90.getFacing(), 1));
+        data180.setFacing(doBlockFace(data180.getFacing(), 2));
+        data270.setFacing(doBlockFace(data270.getFacing(), 3));
+        Place(data90, data180, data270);
         for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
             if (ab.block.getBlockData() instanceof Fence) {
-                Fence fence = (Fence) doFencePane(ab.block, user);
-                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                Fence[] fence = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+                PlaceRelatives(fence[0], fence[1], fence[2], ab.blockFace, ab.block.getType());
             }
     }
 
-    public void ButtonLevers(User user) {
-        Switch data = (Switch) user.variables.dataCopy;
+    public void ButtonLevers() {
+        Switch data90 = (Switch) user.variables.dataCopy.clone();
+        Switch data180 = (Switch) user.variables.dataCopy.clone();
+        Switch data270 = (Switch) user.variables.dataCopy.clone();
         if (Functions.Up(user)) {
             switch (Functions.LookDirection(user)) {
-                case "east":
-                    data.setFacing(WEST);
-                    Place(data, user);
-                    break;
-                case "west":
-                    data.setFacing(EAST);
-                    Place(data, user);
-                    break;
                 case "south":
-                    data.setFacing(SOUTH);
-                    Place(data, user);
+                    data90.setFacing(WEST);
+                    data180.setFacing(NORTH);
+                    data270.setFacing(EAST);
                     break;
                 case "north":
-                    data.setFacing(NORTH);
-                    Place(data, user);
+                    data90.setFacing(EAST);
+                    data180.setFacing(SOUTH);
+                    data270.setFacing(WEST);
+                    break;
+                case "east":
+                    data90.setFacing(SOUTH);
+                    data180.setFacing(WEST);
+                    data270.setFacing(NORTH);
+                    break;
+                case "west":
+                    data90.setFacing(NORTH);
+                    data180.setFacing(EAST);
+                    data270.setFacing(SOUTH);
                     break;
             }
-            data.setFace(Switch.Face.FLOOR);
-        } else if (Functions.Down(user))
-            data.setFace(Switch.Face.CEILING);
-        if (Functions.East(user))
-            data.setFacing(WEST);
-        else if (Functions.West(user))
-            data.setFacing(EAST);
-        else if (Functions.South(user))
-            data.setFacing(SOUTH);
-        else if (Functions.North(user))
-            data.setFacing(NORTH);
-        Place(data, user);
+            data90.setFace(Switch.Face.FLOOR);
+            data180.setFace(Switch.Face.FLOOR);
+            data270.setFace(Switch.Face.FLOOR);
+        } else if (Functions.Down(user)) {
+            data90.setFace(Switch.Face.CEILING);
+            data180.setFace(Switch.Face.CEILING);
+            data270.setFace(Switch.Face.CEILING);
+        }
+        if (Functions.East(user)) {
+            data90.setFacing(SOUTH);
+            data180.setFacing(WEST);
+            data270.setFacing(NORTH);
+        } else if (Functions.West(user)) {
+            data90.setFacing(NORTH);
+            data180.setFacing(EAST);
+            data270.setFacing(SOUTH);
+        } else if (Functions.South(user)) {
+            data90.setFacing(WEST);
+            data180.setFacing(NORTH);
+            data270.setFacing(EAST);
+        } else {
+            data90.setFacing(EAST);
+            data180.setFacing(SOUTH);
+            data270.setFacing(WEST);
+        }
+        Place(data90, data180, data270);
     }
 
-    public void Torches(User user) {
+    public void Torches() {
         String mat = user.variables.materialCopy.name();
         if (mat.equalsIgnoreCase("REDSTONE_WALL_TORCH")) {
-            RedstoneWallTorch data = (RedstoneWallTorch) user.variables.dataCopy;
-            if (Functions.East(user))
-                data.setFacing(WEST);
-            else
-                data.setFacing(EAST);
-            if (Functions.South(user))
-                data.setFacing(SOUTH);
-            else
-                data.setFacing(NORTH);
-            Place(data, user);
+            RedstoneWallTorch data90 = (RedstoneWallTorch) user.variables.dataCopy;
+            RedstoneWallTorch data180 = (RedstoneWallTorch) user.variables.dataCopy;
+            RedstoneWallTorch data270 = (RedstoneWallTorch) user.variables.dataCopy;
+            if (Functions.East(user)) {
+                data90.setFacing(SOUTH);
+                data180.setFacing(WEST);
+                data270.setFacing(NORTH);
+            } else if (Functions.West(user)) {
+                data90.setFacing(NORTH);
+                data180.setFacing(EAST);
+                data270.setFacing(SOUTH);
+            } else if (Functions.South(user)) {
+                data90.setFacing(WEST);
+                data180.setFacing(NORTH);
+                data270.setFacing(EAST);
+            } else {
+                data90.setFacing(EAST);
+                data180.setFacing(SOUTH);
+                data270.setFacing(WEST);
+            }
+            Place(data90, data180, data270);
         } else if (mat.equalsIgnoreCase("WALL_TORCH")) {
-            Directional data = (Directional) user.variables.dataCopy;
-            if (Functions.East(user))
-                data.setFacing(WEST);
-            else
-                data.setFacing(EAST);
-            if (Functions.South(user))
-                data.setFacing(SOUTH);
-            else
-                data.setFacing(NORTH);
-            Place(data, user);
+            Directional data90 = (Directional) user.variables.dataCopy;
+            Directional data180 = (Directional) user.variables.dataCopy;
+            Directional data270 = (Directional) user.variables.dataCopy;
+            if (Functions.East(user)) {
+                data90.setFacing(SOUTH);
+                data180.setFacing(WEST);
+                data270.setFacing(NORTH);
+            } else if (Functions.West(user)) {
+                data90.setFacing(NORTH);
+                data180.setFacing(EAST);
+                data270.setFacing(SOUTH);
+            } else if (Functions.South(user)) {
+                data90.setFacing(WEST);
+                data180.setFacing(NORTH);
+                data270.setFacing(EAST);
+            } else {
+                data90.setFacing(EAST);
+                data180.setFacing(SOUTH);
+                data270.setFacing(WEST);
+            }
+            Place(data90, data180, data270);
         }
     }
 
-    public void Halfslabs(User user) {
-        Place(user.variables.dataCopy, user);
+    public void Halfslabs() {
+        Place(user.variables.dataCopy, user.variables.dataCopy, user.variables.dataCopy);
         Slab data = (Slab) user.variables.dataCopy;
         if (data.getType() == Slab.Type.DOUBLE) {
             for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
                 if (ab.block.getBlockData() instanceof Fence) {
-                    Fence fence = (Fence) doFencePane(ab.block, user);
-                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    Fence fence[] = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+                    PlaceRelatives(fence[0], fence[1], fence[2], ab.blockFace, ab.block.getType());
                 }
         }
     }
 
-    public void Doors(User user) {
-        Door datab = (Door) user.variables.currentBlock.getType().createBlockData();
-        Door datat = (Door) user.variables.currentBlock.getType().createBlockData();
+    public void Doors() {
         Door.Hinge hinge = ((Door) user.variables.dataCopy).getHinge();
+        Door datab = (Door) user.variables.currentBlock.getType().createBlockData();
+        datab.setHalf(Bisected.Half.BOTTOM);
+        datab.setHinge(hinge);
+        Door datat = (Door) user.variables.currentBlock.getType().createBlockData();
+        datat.setHalf(Bisected.Half.TOP);
+        datat.setHinge(hinge);
+        Door datab90 = (Door) datab.clone();
+        Door datab180 = (Door) datab.clone();
+        Door datab270 = (Door) datab.clone();
+        Door datat90 = (Door) datat.clone();
+        Door datat180 = (Door) datat.clone();
+        Door datat270 = (Door) datat.clone();
         switch (Functions.LookDirection(user)) {
             case "south":
-                datab.setFacing(SOUTH);
-                datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
-                datab.setHalf(Bisected.Half.BOTTOM);
-                Place(datab, user);
+                datab90.setFacing(WEST);
+                datab180.setFacing(NORTH);
+                datab270.setFacing(EAST);
+                Place(datab90, datab180, datab270);
 
-                datat.setFacing(SOUTH);
-                datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
-                datat.setHalf(Bisected.Half.TOP);
-                .Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
+                datab90.setFacing(WEST);
+                datab180.setFacing(NORTH);
+                datab270.setFacing(EAST);
+                Place(datab90, datab180, datab270, 1);
                 break;
             case "north":
-                datab.setFacing(NORTH);
-                datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
-                datab.setHalf(Bisected.Half.BOTTOM);
-                Place(datab, user);
+                datab90.setFacing(EAST);
+                datab180.setFacing(SOUTH);
+                datab270.setFacing(WEST);
+                Place(datab90, datab180, datab270);
 
-                datat.setFacing(NORTH);
-                datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
-                datat.setHalf(Bisected.Half.TOP);
-                .Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
+                datat90.setFacing(EAST);
+                datat180.setFacing(SOUTH);
+                datat270.setFacing(WEST);
+                Place(datab90, datab180, datab270, 1);
                 break;
             case "east":
-                datab.setFacing(WEST);
-                datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
-                datab.setHalf(Bisected.Half.BOTTOM);
-                Place(datab, user);
+                datab90.setFacing(SOUTH);
+                datab180.setFacing(WEST);
+                datab270.setFacing(NORTH);
+                Place(datab90, datab180, datab270);
 
-                datat.setFacing(WEST);
-                datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
-                datat.setHalf(Bisected.Half.TOP);
-                .Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
+                datat90.setFacing(SOUTH);
+                datat180.setFacing(WEST);
+                datat270.setFacing(NORTH);
+                Place(datab90, datab180, datab270, 1);
                 break;
             case "west":
-                datab.setFacing(EAST);
-                datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
-                datab.setHalf(Bisected.Half.BOTTOM);
-                Place(datab, user);
+                datab90.setFacing(NORTH);
+                datab180.setFacing(EAST);
+                datab270.setFacing(SOUTH);
+                Place(datab90, datab180, datab270);
 
-                datat.setFacing(EAST);
-                datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
-                datat.setHalf(Bisected.Half.TOP);
-                .Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + 1, user.variables.zDif, datat, user);
+                datat90.setFacing(SOUTH);
+                datat180.setFacing(WEST);
+                datat270.setFacing(NORTH);
+                Place(datab90, datab180, datab270, 1);
                 break;
         }
     }
 
-    public void Trapdoors(User user) {
-        TrapDoor data = (TrapDoor) user.variables.dataCopy;
-        data.setFacing(doBlockFace(data.getFacing()));
-        Place(data, user);
+    public void Trapdoors() {
+        TrapDoor data = (TrapDoor) user.variables.dataCopy.clone();
+        TrapDoor data90 = (TrapDoor) user.variables.dataCopy.clone();
+        TrapDoor data180 = (TrapDoor) user.variables.dataCopy.clone();
+        TrapDoor data270 = (TrapDoor) user.variables.dataCopy.clone();
+        data90.setFacing(doBlockFace(data.getFacing(), 1));
+        data180.setFacing(doBlockFace(data.getFacing(), 2));
+        data270.setFacing(doBlockFace(data.getFacing(), 3));
+        Place(data90, data180, data270);
     }
 
-    public void Pistons(User user) {
-        Piston data = (Piston) user.variables.dataCopy;
-        data.setFacing(doBlockFace(data.getFacing()));
-        Place(data, user);
+    public void Pistons() {
+        Piston data = (Piston) user.variables.dataCopy.clone();
+        Piston data90 = (Piston) user.variables.dataCopy.clone();
+        Piston data180 = (Piston) user.variables.dataCopy.clone();
+        Piston data270 = (Piston) user.variables.dataCopy.clone();
+        data90.setFacing(doBlockFace(data.getFacing(), 1));
+        data180.setFacing(doBlockFace(data.getFacing(), 2));
+        data270.setFacing(doBlockFace(data.getFacing(), 3));
+        Place(data90, data180, data270);
     }
 
-    public void EndRods(User user) {
-        Directional data = (Directional) user.variables.dataCopy;
-        data.setFacing(doBlockFace(data.getFacing()));
-        Place(data, user);
+    public void EndRods() {
+        Directional data = (Directional) user.variables.dataCopy.clone();
+        Directional data90 = (Directional) user.variables.dataCopy.clone();
+        Directional data180 = (Directional) user.variables.dataCopy.clone();
+        Directional data270 = (Directional) user.variables.dataCopy.clone();
+        data90.setFacing(doBlockFace(data.getFacing(), 1));
+        data180.setFacing(doBlockFace(data.getFacing(), 2));
+        data270.setFacing(doBlockFace(data.getFacing(), 3));
+        Place(data90, data180, data270);
     }
 
-    public void Chests(User user) {
-        if (user.variables.currentBlock.getType() == Material.ENDER_CHEST) {
+    public void Chests() {
+        /*if (user.variables.currentBlock.getType() == Material.ENDER_CHEST) {
             EnderChest data = (EnderChest) user.variables.dataCopy;
             data.setFacing(doBlockFace(data.getFacing()));
-            Place(data, user);
+            Place(data);
         } else {
             Chest data = (Chest) user.variables.dataCopy.clone();
             data.setFacing(doBlockFace(data.getFacing()));
@@ -404,8 +595,13 @@ public class Rotating90 implements Mirroring {
                             if (chest.getFacing() == NORTH && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.WEST);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.EAST);
+
+                                PlaceRelatives();
+
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif.variables.zDif, data, chest.getMaterial(), BlockFace.EAST);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         } else if (user.variables.currentBlock.getRelative(BlockFace.WEST).getType() == user.variables.currentBlock.getType()) {
@@ -413,8 +609,16 @@ public class Rotating90 implements Mirroring {
                             if (chest.getFacing() == NORTH && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.EAST);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.WEST);
+
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, chest.getMaterial(), BlockFace.EAST);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
+
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif.variables.zDif, data, chest.getMaterial(), BlockFace.WEST);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
@@ -428,10 +632,18 @@ public class Rotating90 implements Mirroring {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
                                 chest.setFacing(BlockFace.WEST);
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.SOUTH);
+
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, chest.getMaterial(), BlockFace.SOUTH);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                                 Chest chest2 = (Chest) data.clone();
                                 chest2.setFacing(BlockFace.EAST);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.SOUTH);
+
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif.variables.zDif, chest2, chest.getMaterial(), BlockFace.SOUTH);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         } else if (user.variables.currentBlock.getRelative(BlockFace.NORTH).getType() == user.variables.currentBlock.getType()) {
@@ -440,10 +652,18 @@ public class Rotating90 implements Mirroring {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
                                 chest.setFacing(BlockFace.WEST);
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.NORTH);
+
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, chest.getMaterial(), BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                                 Chest chest2 = (Chest) data.clone();
                                 chest2.setFacing(BlockFace.EAST);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.NORTH);
+
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif.variables.zDif, chest2, chest.getMaterial(), BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
@@ -456,8 +676,16 @@ public class Rotating90 implements Mirroring {
                             if (chest.getFacing() == SOUTH && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.EAST);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.WEST);
+
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, chest.getMaterial(), BlockFace.EAST);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
+
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif.variables.zDif, data, chest.getMaterial(), BlockFace.WEST);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         } else if (user.variables.currentBlock.getRelative(BlockFace.EAST).getType() == user.variables.currentBlock.getType()) {
@@ -465,8 +693,16 @@ public class Rotating90 implements Mirroring {
                             if (chest.getFacing() == SOUTH && chest.getType() == Chest.Type.SINGLE) {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.WEST);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, data, chest.getMaterial(), user, BlockFace.EAST);
+
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, chest.getMaterial(), BlockFace.WEST);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
+
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif.variables.zDif, data, chest.getMaterial(), BlockFace.EAST);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
@@ -480,10 +716,18 @@ public class Rotating90 implements Mirroring {
                                 chest.setType(Chest.Type.LEFT);
                                 data.setType(Chest.Type.RIGHT);
                                 chest.setFacing(BlockFace.EAST);
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.NORTH);
+
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, chest.getMaterial(), BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                                 Chest chest2 = (Chest) data.clone();
                                 chest2.setFacing(BlockFace.WEST);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.NORTH);
+
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif.variables.zDif, chest2, chest.getMaterial(), BlockFace.NORTH);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         } else if (user.variables.currentBlock.getRelative(BlockFace.SOUTH).getType() == user.variables.currentBlock.getType()) {
@@ -492,99 +736,165 @@ public class Rotating90 implements Mirroring {
                                 chest.setType(Chest.Type.RIGHT);
                                 data.setType(Chest.Type.LEFT);
                                 chest.setFacing(BlockFace.EAST);
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, chest.getMaterial(), user, BlockFace.SOUTH);
+
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, chest.getMaterial(), BlockFace.SOUTH);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                                 Chest chest2 = (Chest) data.clone();
                                 chest2.setFacing(BlockFace.WEST);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, chest.getMaterial(), user, BlockFace.SOUTH);
+
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif.variables.zDif, chest2, chest.getMaterial(), BlockFace.SOUTH);
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif.variables.yDif.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), doBlockFace(ab.blockFace, 3));
                             } else
                                 data.setType(Chest.Type.SINGLE);
                         }
                         break;
                 }
             }
-            Place(data, user);
-        }
+            Place(data);
+        }*/
     }
 
-    public void RotateXZ(User user) {
-        Directional data = (Directional) user.variables.dataCopy;
-        data.setFacing(doBlockFace(data.getFacing()));
-        Place(data, user);
+    public void RotateXZ() {
+        Directional data = (Directional) user.variables.dataCopy.clone();
+        Directional data90 = (Directional) user.variables.dataCopy.clone();
+        Directional data180 = (Directional) user.variables.dataCopy.clone();
+        Directional data270 = (Directional) user.variables.dataCopy.clone();
+        data90.setFacing(doBlockFace(data.getFacing(), 1));
+        data180.setFacing(doBlockFace(data.getFacing(), 2));
+        data270.setFacing(doBlockFace(data.getFacing(), 3));
+        Place(data90, data180, data270);
     }
 
-    public void Vines(User user) {
+    public void Vines() {
         MultipleFacing data = (MultipleFacing) user.variables.dataCopy;
-        MultipleFacing vine = (MultipleFacing) user.variables.dataCopy.clone();
+        MultipleFacing vine90 = (MultipleFacing) user.variables.dataCopy.clone();
+        MultipleFacing vine180 = (MultipleFacing) user.variables.dataCopy.clone();
+        MultipleFacing vine270 = (MultipleFacing) user.variables.dataCopy.clone();
         for (BlockFace face : data.getFaces()) {
-            vine.setFace(face, false);
-            vine.setFace(doBlockFace(face), true);
+            vine90.setFace(face, false);
+            vine180.setFace(face, false);
+            vine270.setFace(face, false);
+            vine90.setFace(doBlockFace(face, 1), true);
+            vine180.setFace(doBlockFace(face, 2), true);
+            vine270.setFace(doBlockFace(face, 3), true);
         }
-        Place(vine, user);
+        Place(vine90, vine180, vine270);
     }
 
-    public void TripWire(User user) {
+    public void TripWire() {
         TripwireHook data = (TripwireHook) user.variables.dataCopy.clone();
-        data.setFacing(doBlockFace(data.getFacing()));
-        Place(data, user);
+        TripwireHook data90 = (TripwireHook) user.variables.dataCopy.clone();
+        TripwireHook data180 = (TripwireHook) user.variables.dataCopy.clone();
+        TripwireHook data270 = (TripwireHook) user.variables.dataCopy.clone();
+        data90.setFacing(doBlockFace(data.getFacing(), 1));
+        data180.setFacing(doBlockFace(data.getFacing(), 2));
+        data270.setFacing(doBlockFace(data.getFacing(), 3));
+        Place(data90, data180, data270);
     }
 
-    public void Hopper(User user) {
+    public void Hopper() {
         Hopper data = (Hopper) user.variables.dataCopy.clone();
-        data.setFacing(doBlockFace(data.getFacing()));
-        Place(data, user);
+        Hopper data90 = (Hopper) user.variables.dataCopy.clone();
+        Hopper data180 = (Hopper) user.variables.dataCopy.clone();
+        Hopper data270 = (Hopper) user.variables.dataCopy.clone();
+        data90.setFacing(doBlockFace(data.getFacing(), 1));
+        data180.setFacing(doBlockFace(data.getFacing(), 2));
+        data270.setFacing(doBlockFace(data.getFacing(), 3));
+        Place(data90, data180, data270);
     }
 
-    public void TallFlower(User user) {
+    public void TallFlower() {
         Bisected data = (Bisected) user.variables.dataCopy.clone();
         Bisected data2 = (Bisected) user.variables.dataCopy.clone();
         data2.setHalf(data.getHalf() == Bisected.Half.BOTTOM ? Bisected.Half.TOP : Bisected.Half.BOTTOM);
-        Place(data, user);
-        int y = user.variables.yDif;
-        .Functions.PlaceBlock(-user.variables.xDif, data.getHalf() == Bisected.Half.BOTTOM ? y + 1 : y - 1, user.variables.zDif, data2, user);
+        Place(data, data, data);
+        Place(data2, data2, data2, data.getHalf() == Bisected.Half.BOTTOM ? 1 : -1);
     }
 
-    public void Terracotta(User user) {
-        Directional data = (Directional) user.variables.dataCopy.clone();
+    public void Terracotta() {
+        Directional data = (Directional) user.variables.dataCopy;
+        Directional data90 = (Directional) user.variables.dataCopy.clone();
+        Directional data180 = (Directional) user.variables.dataCopy.clone();
+        Directional data270 = (Directional) user.variables.dataCopy.clone();
         switch (data.getFacing()) {
             case NORTH:
-                data.setFacing(BlockFace.EAST);
+                data90.setFacing(BlockFace.EAST);
+                data180.setFacing(BlockFace.EAST);
+                data270.setFacing(BlockFace.EAST);
                 break;
             case EAST:
-                data.setFacing(BlockFace.NORTH);
+                data90.setFacing(BlockFace.EAST);
+                data180.setFacing(BlockFace.EAST);
+                data270.setFacing(BlockFace.EAST);
                 break;
             case SOUTH:
-                data.setFacing(BlockFace.WEST);
+                data90.setFacing(BlockFace.EAST);
+                data180.setFacing(BlockFace.EAST);
+                data270.setFacing(BlockFace.EAST);
                 break;
             case WEST:
-                data.setFacing(BlockFace.SOUTH);
+                data90.setFacing(BlockFace.EAST);
+                data180.setFacing(BlockFace.EAST);
+                data270.setFacing(BlockFace.EAST);
                 break;
         }
-        Place(data, user);
+        Place(data90, data180, data270);
     }
 
-    private void Place(BlockData data, User user) {
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, data, user);
-        Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, data, user);
-        Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, data, user);
+    private void Place(BlockData data90, BlockData data180, BlockData data270) {
+//        if (user.variables.isZ90) {
+//            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, data270, user);
+//            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, data90, user);
+//        } else {
+        Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, data90, user);
+        Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, data270, user);
+//        }
+        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, data180, user);
     }
 
-    public void Default(User user) {
+    private void Place(BlockData data90, BlockData data180, BlockData data270, int yDif) {
+//        if (user.variables.isZ90) {
+//            Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif + yDif, user.variables.xDif, data270, user);
+//            Functions.PlaceBlock(user.variables.zDif, user.variables.yDif + yDif, -user.variables.xDif, data90, user);
+//        } else {
+        Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif + yDif, user.variables.xDif, data90, user);
+        Functions.PlaceBlock(user.variables.zDif, user.variables.yDif + yDif, -user.variables.xDif, data270, user);
+//        }
+        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif + yDif, -user.variables.zDif, data180, user);
+    }
+
+    private void PlaceRelatives(BlockData data90, BlockData data180, BlockData data270, BlockFace bf, Material mat) {
+//        if (user.variables.isZ90) {
+//            Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, data270, mat, user, doBlockFace(bf, 3));
+//            Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, data90, mat, user, doBlockFace(bf, 1));
+//        } else {
+        Functions.PlaceBlockRelative(-user.variables.zDif, user.variables.yDif, user.variables.xDif, data90, mat, user, doBlockFace(bf, 1));
+        Functions.PlaceBlockRelative(user.variables.zDif, user.variables.yDif, -user.variables.xDif, data270, mat, user, doBlockFace(bf, 3));
+//        }
+        Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, data180, mat, user, doBlockFace(bf, 2));
+    }
+
+    public void Default() {
         Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
-        Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
         Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
+        Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
         if (user.variables.currentBlock.getType().isSolid())
             for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
                 if (ab.block.getBlockData() instanceof Fence) {
-                    Fence fence = (Fence) doFencePane(ab.block, user);
-                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    Fence[] fence = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+                    PlaceRelatives(fence[0], fence[1], fence[2], ab.blockFace, ab.block.getType());
                 } else if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
-                    GlassPane pane = (GlassPane) doFencePane(ab.block, user);
-                    .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                    GlassPane[] pane = Arrays.copyOf(doFencePane(ab.block), 3, GlassPane[].class);
+                    PlaceRelatives(pane[0], pane[1], pane[2], ab.blockFace, ab.block.getType());
                 }
     }
 
     @SuppressWarnings("Duplicates")
-    public void Remove(User user) {
+    public void Remove() {
         Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
         Functions.RemoveBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
         Functions.RemoveBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
@@ -597,21 +907,27 @@ public class Rotating90 implements Mirroring {
         }
         for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
             if (ab.block.getBlockData() instanceof Fence) {
-                Fence fence = (Fence) doFencePane(ab.block, user);
-                fence.setFace(doBlockFace(ab.blockFace).getOppositeFace(), false);
-                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                Fence[] fence = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+                for (int i = 1; i <= 3; i++)
+                    fence[i - 1].setFace(doBlockFace(ab.blockFace, i).getOppositeFace(), false);
+                PlaceRelatives(fence[0], fence[1], fence[2], ab.blockFace, ab.block.getType());
             } else if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
-                GlassPane pane = (GlassPane) doFencePane(ab.block, user);
-                pane.setFace(doBlockFace(ab.blockFace).getOppositeFace(), false);
-                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, pane, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                GlassPane[] pane = Arrays.copyOf(doFencePane(ab.block), 3, GlassPane[].class);
+                for (int i = 1; i <= 3; i++)
+                    pane[i - 1].setFace(doBlockFace(ab.blockFace, i).getOppositeFace(), false);
+                PlaceRelatives(pane[0], pane[1], pane[2], ab.blockFace, ab.block.getType());
             } else if (ab.block.getBlockData() instanceof Gate && user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")) {
                 Gate gate = (Gate) ab.block.getBlockData().clone();
                 if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
                     if (!ab.block.getRelative(ab.blockFace).getType().name().toLowerCase().contains("cobblestone_wall")) {
                         gate.setInWall(false);
-                        .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, gate, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                        Gate gate90 = (Gate) gate.clone();
+                        gate90.setFacing(doBlockFace(gate.getFacing(), 1));
+                        Gate gate270 = (Gate) gate.clone();
+                        gate270.setFacing(doBlockFace(gate.getFacing(), 3));
+                        PlaceRelatives(gate90, gate, gate270, ab.blockFace, ab.block.getType());
                     }
-            } else if (ab.block.getBlockData() instanceof Chest && user.variables.currentBlock.getBlockData() instanceof Chest && user.variables.currentBlock.getType() == ab.block.getType()) {
+            } /*else if (ab.block.getBlockData() instanceof Chest && user.variables.currentBlock.getBlockData() instanceof Chest && user.variables.currentBlock.getType() == ab.block.getType()) {
                 Chest data = (Chest) user.variables.currentBlock.getBlockData().clone();
                 if (((Chest) ab.block.getBlockData()).getFacing() == data.getFacing())
                     switch (data.getFacing()) {
@@ -620,10 +936,14 @@ public class Rotating90 implements Mirroring {
                                 Chest chest = (Chest) ab.block.getBlockData().clone();
                                 chest.setType(Chest.Type.SINGLE);
                                 chest.setFacing(doBlockFace(chest.getFacing()));
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 3));
                                 Chest chest2 = (Chest) user.variables.currentBlock.getRelative(ab.blockFace).getBlockData().clone();
                                 chest2.setType(Chest.Type.SINGLE);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 3));
                             }
                             break;
                         case EAST:
@@ -631,10 +951,14 @@ public class Rotating90 implements Mirroring {
                                 Chest chest = (Chest) ab.block.getBlockData().clone();
                                 chest.setType(Chest.Type.SINGLE);
                                 chest.setFacing(doBlockFace(chest.getFacing()));
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 3));
                                 Chest chest2 = (Chest) user.variables.currentBlock.getRelative(ab.blockFace).getBlockData().clone();
                                 chest2.setType(Chest.Type.SINGLE);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 3));
                             }
                             break;
                         case SOUTH:
@@ -642,10 +966,14 @@ public class Rotating90 implements Mirroring {
                                 Chest chest = (Chest) ab.block.getBlockData().clone();
                                 chest.setType(Chest.Type.SINGLE);
                                 chest.setFacing(doBlockFace(chest.getFacing()));
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 3));
                                 Chest chest2 = (Chest) user.variables.currentBlock.getRelative(ab.blockFace).getBlockData().clone();
                                 chest2.setType(Chest.Type.SINGLE);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 3));
                             }
                             break;
                         case WEST:
@@ -653,26 +981,18 @@ public class Rotating90 implements Mirroring {
                                 Chest chest = (Chest) ab.block.getBlockData().clone();
                                 chest.setType(Chest.Type.SINGLE);
                                 chest.setFacing(doBlockFace(chest.getFacing()));
-                                .Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest, ab.block.getType(), user, doBlockFace(ab.blockFace, 3));
                                 Chest chest2 = (Chest) user.variables.currentBlock.getRelative(ab.blockFace).getBlockData().clone();
                                 chest2.setType(Chest.Type.SINGLE);
-                                .Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, ab.blockFace);
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 1));
+                                Functions.PlaceBlockRelative(-user.variables.xDif, user.variables.yDif, user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 2));
+                                Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, chest2, ab.block.getType(), user, doBlockFace(ab.blockFace, 3));
                             }
                             break;
                     }
-            }
-    }
-/*
-
-    void Default(User user) {
-        Functions.PlaceBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
-        Functions.PlaceBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
-        Functions.PlaceBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
+            }*/
     }
 
-    void Remove(User user) {
-        Functions.RemoveBlock(-user.variables.xDif, user.variables.yDif, -user.variables.zDif, user);
-        Functions.RemoveBlock(user.variables.zDif, user.variables.yDif, -user.variables.xDif, user);
-        Functions.RemoveBlock(-user.variables.zDif, user.variables.yDif, user.variables.xDif, user);
-    }*/
 }
