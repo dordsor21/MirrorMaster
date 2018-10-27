@@ -1,5 +1,5 @@
-package be.mc.woutwoot.MirrorMaster;
+package me.dordsor21.MirrorMaster.objects;
 
-enum Mirroring {
+public enum Mirrors {
     None, CrossMirroring, XMirroring, ZMirroring, Rotating180, Rotating90
 }

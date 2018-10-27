@@ -1,9 +1,8 @@
 name: MirrorMaster
-main: be.mc.woutwoot.MirrorMaster.MirrorMaster
-version: 1.21
+main: me.dordsor21.MirrorMaster.MirrorMaster
+version: 1
+api-version: 1.13
 commands:
   mm:
     description: Main command for MirrorMaster.
-    usage: /<command> [argument]
-    permission: MirrorMaster.use
-    permission-message: You don't have the permissions to use MirrorMaster! Tell an admin to add MirrorMaster.use
+    aliases:
