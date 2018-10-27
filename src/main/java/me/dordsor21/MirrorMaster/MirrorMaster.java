@@ -2,9 +2,11 @@ package me.dordsor21.MirrorMaster;
 
 import com.intellectualcrafters.plot.api.PlotAPI;
 import me.dordsor21.MirrorMaster.events.MirrorEvent;
+import me.dordsor21.MirrorMaster.mirrors.Rotating180;
 import me.dordsor21.MirrorMaster.mirrors.Rotating90;
 import me.dordsor21.MirrorMaster.mirrors.XMirroring;
 import me.dordsor21.MirrorMaster.mirrors.ZMirroring;
+import me.dordsor21.MirrorMaster.objects.Mirrors;
 import me.dordsor21.MirrorMaster.objects.User;
 import me.dordsor21.MirrorMaster.objects.Variables;
 import me.dordsor21.MirrorMaster.util.Commands;
@@ -21,6 +23,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -230,7 +233,7 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                             variables.zDif = user.variables.currentBlock.getZ() - user.mirrorPoint.getZ();
 
                             user.variables(variables);
-//                        rotating180.Remove(user);
+                            (new Rotating180(user)).Remove();
                             break;
 
                         case Rotating90:
@@ -243,6 +246,18 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                     }
                 }
             }
+    }
+
+    @EventHandler
+    public void onPlayerLeave(PlayerQuitEvent event) {
+        User user = UsersManager.GetUser(event.getPlayer());
+        if (user.mirror != Mirrors.None) {
+            if (!user.mirrorBlockDestroyed) {
+                Block b = user.mirrorPoint;
+                b.setType(user.mirrorPointMat);
+                user.mirrorPoint(b);
+            }
+        }
     }
 
     public static boolean P2() {
