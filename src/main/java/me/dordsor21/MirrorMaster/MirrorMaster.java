@@ -1,6 +1,5 @@
 package me.dordsor21.MirrorMaster;
 
-import com.intellectualcrafters.plot.api.PlotAPI;
 import me.dordsor21.MirrorMaster.events.MirrorEvent;
 import me.dordsor21.MirrorMaster.mirrors.Rotating180;
 import me.dordsor21.MirrorMaster.mirrors.Rotating90;
@@ -31,8 +30,15 @@ import org.bukkit.plugin.java.JavaPlugin;
 public class MirrorMaster extends JavaPlugin implements Listener {
 
     private static boolean p2;
-    public static PlotAPI api;
-    public static MirrorMaster instance;
+    private static MirrorMaster instance;
+
+    public static boolean P2() {
+        return p2;
+    }
+
+    public static MirrorMaster get() {
+        return instance;
+    }
 
     public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
         if (cmd.getName().equalsIgnoreCase("mm")) {
@@ -260,10 +266,6 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         }
     }
 
-    public static boolean P2() {
-        return p2;
-    }
-
     public void onEnable() {
         Init();
     }
@@ -276,8 +278,6 @@ public class MirrorMaster extends JavaPlugin implements Listener {
         PluginManager manager = Bukkit.getServer().getPluginManager();
         final Plugin plotsquared = manager.getPlugin("PlotSquared");
         p2 = !(plotsquared != null && !plotsquared.isEnabled());
-        if (p2)
-            api = new PlotAPI();
     }
 
     private void CheckBlock(BlockBreakEvent event) {
