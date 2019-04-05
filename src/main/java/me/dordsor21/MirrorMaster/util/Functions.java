@@ -1,7 +1,7 @@
 package me.dordsor21.MirrorMaster.util;
 
 import com.github.intellectualsites.plotsquared.bukkit.util.BukkitUtil;
-import com.github.intellectualsites.plotsquared.plot.config.C;
+import com.github.intellectualsites.plotsquared.plot.config.Captions;
 import com.github.intellectualsites.plotsquared.plot.config.Settings;
 import com.github.intellectualsites.plotsquared.plot.flag.Flags;
 import com.github.intellectualsites.plotsquared.plot.object.Plot;
@@ -108,13 +108,13 @@ public class Functions {
             PlotPlayer pp = PlotPlayer.wrap(pl);
             if (p != null) {
                 if (!p.hasOwner())
-                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_UNOWNED);
+                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_DESTROY_UNOWNED);
                 if (Settings.Done.RESTRICT_BUILDING && p.getFlags().containsKey(Flags.DONE))
-                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_OTHER);
+                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_DESTROY_OTHER);
                 if (!p.isAdded(pp.getUUID()))
-                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_OTHER);
+                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_DESTROY_OTHER);
             } else {
-                return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_DESTROY_ROAD);
+                return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_DESTROY_ROAD);
             }
         }
         return true;
@@ -126,13 +126,13 @@ public class Functions {
             PlotPlayer pp = PlotPlayer.wrap(pl);
             if (p != null) {
                 if (!p.hasOwner())
-                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_UNOWNED);
+                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_BUILD_UNOWNED);
                 if (Settings.Done.RESTRICT_BUILDING && p.getFlags().containsKey(Flags.DONE))
-                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_OTHER);
+                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_BUILD_OTHER);
                 if (!p.isAdded(pp.getUUID()))
-                    return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_OTHER);
+                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_BUILD_OTHER);
             } else {
-                return Permissions.hasPermission(pp, C.PERMISSION_ADMIN_BUILD_ROAD);
+                return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_BUILD_ROAD);
             }
         }
         return true;
