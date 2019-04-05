@@ -29,6 +29,10 @@
             <id>p2</id>
             <url>https://incendo.org/mvn/</url>
         </repository>
+        <repository>
+            <id>sk89q-repo</id>
+            <url>http://maven.sk89q.com/artifactory/repo/</url>
+        </repository>
     </repositories>
 
     <dependencies>
