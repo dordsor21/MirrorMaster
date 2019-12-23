@@ -26,10 +26,6 @@
             <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
         </repository>
         <repository>
-            <id>p2</id>
-            <url>https://incendo.org/mvn/</url>
-        </repository>
-        <repository>
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/artifactory/repo/</url>
         </repository>
@@ -39,25 +35,21 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <version>1.15.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bukkit</groupId>
             <artifactId>craftbukkit</artifactId>
-            <version>1.13.2-R0.1-SNAPSHOT</version>
+            <version>1.15.1-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.github.intellectualsites.plotsquared</groupId>
+            <groupId>PlotSquared</groupId>
             <artifactId>PlotSquared</artifactId>
-            <version>4</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.intellectualsites.plotsquared</groupId>
-            <artifactId>PlotSquared</artifactId>
-            <classifier>Bukkit</classifier>
-            <version>4</version>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${project.basedir}/lib/PlotSquared.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
