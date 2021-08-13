@@ -17,7 +17,7 @@ import static org.bukkit.block.BlockFace.*;
 @SuppressWarnings("Duplicates")
 public class XMirroring implements Mirroring {
 
-    private User user;
+    private final User user;
 
     public XMirroring(User user) {
         this.user = user;
@@ -31,22 +31,22 @@ public class XMirroring implements Mirroring {
         String shape = data.getShape().name();
         data.setShape(Stairs.Shape.valueOf(shape.contains("LEFT") ? shape.replace("LEFT", "RIGHT") : shape.replace("RIGHT", "LEFT")));
         switch (Functions.LookDirection(user)) {
-            case "south":
+            case "south" -> {
                 data.setFacing(NORTH);
                 Place(data);
-                break;
-            case "north":
+            }
+            case "north" -> {
                 data.setFacing(SOUTH);
                 Place(data);
-                break;
-            case "east":
+            }
+            case "east" -> {
                 data.setFacing(EAST);
                 Place(data);
-                break;
-            case "west":
+            }
+            case "west" -> {
                 data.setFacing(WEST);
                 Place(data);
-                break;
+            }
         }
 
         for (BlockFace face : data.getFaces())
@@ -64,16 +64,14 @@ public class XMirroring implements Mirroring {
             if (user.variables.currentBlock.getType() == Material.NETHER_BRICK_FENCE) {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
-                    else
-                        data.setFace(doBlockFace(ab.blockFace), false);
+                    data.setFace(doBlockFace(ab.blockFace), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                 } else if (ab.block.getType() == Material.NETHER_BRICK_FENCE) {
                     data.setFace(doBlockFace(ab.blockFace), true);
                     Fence fence = (Fence) doFencePane(ab.block);
                     Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
-                } else
-                    data = (Fence) genericFencePane(data, ab);
+                } else {
+                    genericFencePane(data, ab);
+                }
             } else if (user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")) {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
@@ -88,8 +86,9 @@ public class XMirroring implements Mirroring {
                     data.setFace(doBlockFace(ab.blockFace), true);
                     Fence wall = (Fence) doFencePane(ab.block);
                     Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, wall, ab.block.getType(), user, doBlockFace(ab.blockFace));
-                } else
-                    data = (Fence) genericFencePane(data, ab);
+                } else {
+                    genericFencePane(data, ab);
+                }
             } else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("iron_bars")) {
                 if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
                     data.setFace(doBlockFace(ab.blockFace), true);
@@ -99,30 +98,25 @@ public class XMirroring implements Mirroring {
                     data.setFace(doBlockFace(ab.blockFace), true);
                     Fence bars = (Fence) doFencePane(ab.block);
                     Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, bars, ab.block.getType(), user, doBlockFace(ab.blockFace));
-                } else
-                    data = (Fence) genericFencePane(data, ab);
+                } else {
+                    genericFencePane(data, ab);
+                }
             } else {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
-                    else
-                        data.setFace(doBlockFace(ab.blockFace), false);
+                    data.setFace(doBlockFace(ab.blockFace), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                 } else if (ab.block.getType().name().toLowerCase().contains("fence")) {
                     data.setFace(doBlockFace(ab.blockFace), true);
                     Fence fence = (Fence) doFencePane(ab.block);
                     Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, fence, ab.block.getType(), user, doBlockFace(ab.blockFace));
                 } else {
-                    data = (Fence) genericFencePane(data, ab);
+                    genericFencePane(data, ab);
                 }
             }
         }
         if (data.getMaterial().name().toLowerCase().contains("cobblestone_wall"))
-            if ((data.getFaces().contains(NORTH) && data.getFaces().contains(SOUTH)) && !(data.getFaces().contains(EAST) || data.getFaces().contains(WEST))
-                    || !(data.getFaces().contains(NORTH) || data.getFaces().contains(SOUTH)) && (data.getFaces().contains(EAST) && data.getFaces().contains(WEST)))
-                data.setFace(UP, false);
-            else
-                data.setFace(UP, true);
+            data.setFace(UP, ((!data.getFaces().contains(NORTH) || !data.getFaces().contains(SOUTH)) || (data.getFaces().contains(EAST) || data.getFaces().contains(WEST)))
+                    && ((data.getFaces().contains(NORTH) || data.getFaces().contains(SOUTH)) || (!data.getFaces().contains(EAST) || !data.getFaces().contains(WEST))));
         Place(data);
     }
 
@@ -137,8 +131,9 @@ public class XMirroring implements Mirroring {
                 data.setFace(doBlockFace(ab.blockFace), true);
                 Fence bars = (Fence) doFencePane(ab.block);
                 Functions.PlaceBlockRelative(user.variables.xDif, user.variables.yDif, -user.variables.zDif, bars, ab.block.getType(), user, doBlockFace(ab.blockFace));
-            } else
-                data = (GlassPane) genericFencePane(data, ab);
+            } else {
+                genericFencePane(data, ab);
+            }
         Place(data);
         if (user.variables.touchingBlock.getType().name().toLowerCase().contains("glass_pane")) {
             GlassPane pane = (GlassPane) user.variables.touchingBlock.getBlockData().clone();
@@ -170,46 +165,38 @@ public class XMirroring implements Mirroring {
             if (b.getType() == Material.NETHER_BRICK_FENCE) {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
-                    else
-                        data.setFace(doBlockFace(ab.blockFace), false);
+                    data.setFace(doBlockFace(ab.blockFace), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                 } else if (ab.block.getType() == Material.NETHER_BRICK_FENCE)
                     data.setFace(doBlockFace(ab.blockFace), true);
-                else
-                    data = genericFencePane(data, ab);
+                else {
+                    genericFencePane(data, ab);
+                }
             } else if (b.getType().name().toLowerCase().contains("cobblestone_wall")) {
                 if (ab.block.getType().name().toLowerCase().contains("cobblestone_wall"))
                     data.setFace(doBlockFace(ab.blockFace), true);
                 else if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
-                    else
-                        data.setFace(doBlockFace(ab.blockFace), false);
-                } else
-                    data = genericFencePane(data, ab);
-                if (((data.getFaces().contains(NORTH) && data.getFaces().contains(SOUTH)) && !(data.getFaces().contains(EAST) || data.getFaces().contains(WEST)))
-                        || (!(data.getFaces().contains(NORTH) || data.getFaces().contains(SOUTH)) && (data.getFaces().contains(EAST) && data.getFaces().contains(WEST))))
-                    data.setFace(UP, false);
-                else
-                    data.setFace(UP, true);
+                    data.setFace(doBlockFace(ab.blockFace), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
+                } else {
+                    genericFencePane(data, ab);
+                }
+                data.setFace(UP, ((!data.getFaces().contains(NORTH) || !data.getFaces().contains(SOUTH)) || (data.getFaces().contains(EAST) || data.getFaces().contains(WEST)))
+                        && ((data.getFaces().contains(NORTH) || data.getFaces().contains(SOUTH)) || (!data.getFaces().contains(EAST) || !data.getFaces().contains(WEST))));
             } else if (b.getType().name().equalsIgnoreCase("iron_bars") || b.getType().name().toLowerCase().contains("glass_pane")) {
                 if (ab.block.getType().name().equalsIgnoreCase("iron_bars") || ab.block.getType().name().toLowerCase().contains("glass_pane"))
                     data.setFace(doBlockFace(ab.blockFace), true);
-                else
-                    data = genericFencePane(data, ab);
+                else {
+                    genericFencePane(data, ab);
+                }
             } else {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
-                    else
-                        data.setFace(doBlockFace(ab.blockFace), false);
+                    data.setFace(doBlockFace(ab.blockFace), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                 } else if (ab.block.getType().name().toLowerCase().contains("fence"))
                     data.setFace(doBlockFace(ab.blockFace), true);
-                else
-                    data = genericFencePane(data, ab);
+                else {
+                    genericFencePane(data, ab);
+                }
             }
         }
         return data;
@@ -221,19 +208,15 @@ public class XMirroring implements Mirroring {
         return bf == NORTH ? SOUTH : NORTH;
     }
 
-    private MultipleFacing genericFencePane(MultipleFacing data, AdjacentBlock ab) {
+    private void genericFencePane(MultipleFacing data, AdjacentBlock ab) {
         if (ab.block.getType().isSolid() && ab.block.getType().isOccluding())
             data.setFace(doBlockFace(ab.blockFace), true);
         else if (ab.block.getBlockData() instanceof Slab && ((Slab) ab.block.getBlockData()).getType() == Slab.Type.DOUBLE)
             data.setFace(doBlockFace(ab.blockFace), true);
         else if (ab.block.getBlockData() instanceof Stairs) {
-            if (((Stairs) ab.block.getBlockData()).getFacing().getOppositeFace() == ab.blockFace)
-                data.setFace(doBlockFace(ab.blockFace), true);
-            else
-                data.setFace(doBlockFace(ab.blockFace), false);
+            data.setFace(doBlockFace(ab.blockFace), ((Stairs) ab.block.getBlockData()).getFacing().getOppositeFace() == ab.blockFace);
         } else
             data.setFace(doBlockFace(ab.blockFace), false);
-        return data;
     }
 
     public void Gates() {
@@ -251,22 +234,22 @@ public class XMirroring implements Mirroring {
         Switch data = (Switch) user.variables.dataCopy;
         if (Functions.Up(user)) {
             switch (Functions.LookDirection(user)) {
-                case "east":
+                case "east" -> {
                     data.setFacing(EAST);
                     Place(data);
-                    break;
-                case "west":
+                }
+                case "west" -> {
                     data.setFacing(WEST);
                     Place(data);
-                    break;
-                case "south":
+                }
+                case "south" -> {
                     data.setFacing(NORTH);
                     Place(data);
-                    break;
-                case "north":
+                }
+                case "north" -> {
                     data.setFacing(SOUTH);
                     Place(data);
-                    break;
+                }
             }
             data.setFace(Switch.Face.FLOOR);
         } else if (Functions.Down(user))
@@ -326,50 +309,46 @@ public class XMirroring implements Mirroring {
         Door datat = (Door) user.variables.currentBlock.getType().createBlockData();
         Door.Hinge hinge = ((Door) user.variables.dataCopy).getHinge();
         switch (Functions.LookDirection(user)) {
-            case "south":
+            case "south" -> {
                 datab.setFacing(NORTH);
                 datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datab.setHalf(Bisected.Half.BOTTOM);
                 Place(datab);
-
                 datat.setFacing(NORTH);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datat.setHalf(Bisected.Half.TOP);
                 Functions.PlaceBlock(user.variables.xDif, user.variables.yDif + 1, -user.variables.zDif, datat, user);
-                break;
-            case "north":
+            }
+            case "north" -> {
                 datab.setFacing(SOUTH);
                 datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datab.setHalf(Bisected.Half.BOTTOM);
                 Place(datab);
-
                 datat.setFacing(SOUTH);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datat.setHalf(Bisected.Half.TOP);
                 Functions.PlaceBlock(user.variables.xDif, user.variables.yDif + 1, -user.variables.zDif, datat, user);
-                break;
-            case "east":
+            }
+            case "east" -> {
                 datab.setFacing(EAST);
                 datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datab.setHalf(Bisected.Half.BOTTOM);
                 Place(datab);
-
                 datat.setFacing(EAST);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datat.setHalf(Bisected.Half.TOP);
                 Functions.PlaceBlock(user.variables.xDif, user.variables.yDif + 1, -user.variables.zDif, datat, user);
-                break;
-            case "west":
+            }
+            case "west" -> {
                 datab.setFacing(WEST);
                 datab.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datab.setHalf(Bisected.Half.BOTTOM);
                 Place(datab);
-
                 datat.setFacing(WEST);
                 datat.setHinge(hinge == Door.Hinge.LEFT ? Door.Hinge.RIGHT : Door.Hinge.LEFT);
                 datat.setHalf(Bisected.Half.TOP);
                 Functions.PlaceBlock(user.variables.xDif, user.variables.yDif + 1, -user.variables.zDif, datat, user);
-                break;
+            }
         }
     }
 
@@ -552,18 +531,10 @@ public class XMirroring implements Mirroring {
     public void Terracotta() {
         Directional data = (Directional) user.variables.dataCopy.clone();
         switch (data.getFacing()) {
-            case NORTH:
-                data.setFacing(BlockFace.WEST);
-                break;
-            case EAST:
-                data.setFacing(BlockFace.SOUTH);
-                break;
-            case SOUTH:
-                data.setFacing(BlockFace.EAST);
-                break;
-            case WEST:
-                data.setFacing(BlockFace.NORTH);
-                break;
+            case NORTH -> data.setFacing(BlockFace.WEST);
+            case EAST -> data.setFacing(BlockFace.SOUTH);
+            case SOUTH -> data.setFacing(BlockFace.EAST);
+            case WEST -> data.setFacing(BlockFace.NORTH);
         }
         Place(data);
     }

@@ -19,7 +19,7 @@ import static org.bukkit.block.BlockFace.*;
 @SuppressWarnings("Duplicates")
 public class Rotating90 implements Mirroring {
 
-    private User user;
+    private final User user;
 
     public Rotating90(User user) {
         this.user = user;
@@ -36,26 +36,26 @@ public class Rotating90 implements Mirroring {
         Stairs data270 = (Stairs) data.clone();
         data.setShape(Stairs.Shape.valueOf(shape.contains("LEFT") ? shape.replace("LEFT", "RIGHT") : shape.replace("RIGHT", "LEFT")));
         switch (Functions.LookDirection(user)) {
-            case "south":
+            case "south" -> {
                 data90.setFacing(WEST);
                 data180.setFacing(NORTH);
                 data270.setFacing(EAST);
-                break;
-            case "north":
+            }
+            case "north" -> {
                 data90.setFacing(EAST);
                 data180.setFacing(SOUTH);
                 data270.setFacing(WEST);
-                break;
-            case "east":
+            }
+            case "east" -> {
                 data90.setFacing(SOUTH);
                 data180.setFacing(WEST);
                 data270.setFacing(NORTH);
-                break;
-            case "west":
+            }
+            case "west" -> {
                 data90.setFacing(NORTH);
                 data180.setFacing(EAST);
                 data270.setFacing(SOUTH);
-                break;
+            }
         }
         Place(data90, data180, data270);
 
@@ -95,9 +95,9 @@ public class Rotating90 implements Mirroring {
 
                     PlaceRelatives(fence[0], fence[1], fence[2], ab.blockFace, ab.block.getType());
                 } else {
-                    data90 = (Fence) genericFencePane(data90, ab, 1);
-                    data180 = (Fence) genericFencePane(data180, ab, 2);
-                    data270 = (Fence) genericFencePane(data270, ab, 3);
+                    genericFencePane(data90, ab, 1);
+                    genericFencePane(data180, ab, 2);
+                    genericFencePane(data270, ab, 3);
                 }
             } else if (user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")) {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
@@ -124,13 +124,13 @@ public class Rotating90 implements Mirroring {
                     data180.setFace(doBlockFace(ab.blockFace, 2), true);
                     data270.setFace(doBlockFace(ab.blockFace, 3), true);
 
-                    Fence wall[] = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+                    Fence[] wall = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
 
                     PlaceRelatives(wall[0], wall[1], wall[2], ab.blockFace, ab.block.getType());
                 } else {
-                    data90 = (Fence) genericFencePane(data90, ab, 1);
-                    data180 = (Fence) genericFencePane(data180, ab, 2);
-                    data270 = (Fence) genericFencePane(data270, ab, 3);
+                    genericFencePane(data90, ab, 1);
+                    genericFencePane(data180, ab, 2);
+                    genericFencePane(data270, ab, 3);
                 }
             } else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("iron_bars")) {
                 if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
@@ -148,9 +148,9 @@ public class Rotating90 implements Mirroring {
                     Fence[] bars = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
                     PlaceRelatives(bars[0], bars[1], bars[2], ab.blockFace, ab.block.getType());
                 } else {
-                    data90 = (Fence) genericFencePane(data90, ab, 1);
-                    data180 = (Fence) genericFencePane(data180, ab, 2);
-                    data270 = (Fence) genericFencePane(data270, ab, 3);
+                    genericFencePane(data90, ab, 1);
+                    genericFencePane(data180, ab, 2);
+                    genericFencePane(data270, ab, 3);
                 }
             } else {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
@@ -172,9 +172,9 @@ public class Rotating90 implements Mirroring {
                     Fence[] fence = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
                     PlaceRelatives(fence[0], fence[1], fence[2], ab.blockFace, ab.block.getType());
                 } else {
-                    data90 = (Fence) genericFencePane(data90, ab, 1);
-                    data180 = (Fence) genericFencePane(data180, ab, 2);
-                    data270 = (Fence) genericFencePane(data270, ab, 3);
+                    genericFencePane(data90, ab, 1);
+                    genericFencePane(data180, ab, 2);
+                    genericFencePane(data270, ab, 3);
                 }
             }
         }
@@ -212,9 +212,9 @@ public class Rotating90 implements Mirroring {
                 Fence[] bars = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
                 PlaceRelatives(bars[0], bars[1], bars[2], ab.blockFace, ab.block.getType());
             } else {
-                data90 = (GlassPane) genericFencePane(data90, ab, 1);
-                data180 = (GlassPane) genericFencePane(data180, ab, 2);
-                data270 = (GlassPane) genericFencePane(data270, ab, 3);
+                genericFencePane(data90, ab, 1);
+                genericFencePane(data180, ab, 2);
+                genericFencePane(data270, ab, 3);
             }
         Place(data90, data180, data270);
         if (user.variables.touchingBlock.getType().name().toLowerCase().contains("glass_pane")) {
@@ -249,10 +249,7 @@ public class Rotating90 implements Mirroring {
                 if (b.getType() == Material.NETHER_BRICK_FENCE) {
                     if (ab.block.getType().name().toLowerCase().contains("gate")) {
                         Gate gate = (Gate) ab.block.getBlockData().clone();
-                        if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
-                        else
-                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), false);
+                        data[i - 1].setFace(doBlockFace(ab.blockFace, i), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                     } else if (ab.block.getType() == Material.NETHER_BRICK_FENCE)
                         data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
                     else
@@ -262,18 +259,11 @@ public class Rotating90 implements Mirroring {
                         data[i - 1].setFace(doBlockFace(ab.blockFace, 1), true);
                     else if (ab.block.getType().name().toLowerCase().contains("gate")) {
                         Gate gate = (Gate) ab.block.getBlockData().clone();
-                        if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace)) {
-                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
-                        } else {
-                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), false);
-                        }
+                        data[i - 1].setFace(doBlockFace(ab.blockFace, i), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                     } else
                         data[i - 1] = genericFencePane(data[i - 1], ab, i);
-                    if (((datat.getFaces().contains(EAST) && datat.getFaces().contains(WEST)) && !(datat.getFaces().contains(NORTH) || datat.getFaces().contains(SOUTH)))
-                            || (!(datat.getFaces().contains(EAST) || datat.getFaces().contains(WEST)) && (datat.getFaces().contains(NORTH) && datat.getFaces().contains(SOUTH))))
-                        data[i - 1].setFace(UP, false);
-                    else
-                        data[i - 1].setFace(UP, true);
+                    data[i - 1].setFace(UP, ((!datat.getFaces().contains(EAST) || !datat.getFaces().contains(WEST)) || (datat.getFaces().contains(NORTH) || datat.getFaces().contains(SOUTH)))
+                            && ((datat.getFaces().contains(EAST) || datat.getFaces().contains(WEST)) || (!datat.getFaces().contains(NORTH) || !datat.getFaces().contains(SOUTH))));
                 } else if (b.getType().name().equalsIgnoreCase("iron_bars") || b.getType().name().toLowerCase().contains("glass_pane")) {
                     if (ab.block.getType().name().equalsIgnoreCase("iron_bars") || ab.block.getType().name().toLowerCase().contains("glass_pane"))
                         data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
@@ -282,10 +272,7 @@ public class Rotating90 implements Mirroring {
                 } else {
                     if (ab.block.getType().name().toLowerCase().contains("gate")) {
                         Gate gate = (Gate) ab.block.getBlockData().clone();
-                        if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
-                        else
-                            data[i - 1].setFace(doBlockFace(ab.blockFace, i), false);
+                        data[i - 1].setFace(doBlockFace(ab.blockFace, i), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                     } else if (ab.block.getType().name().toLowerCase().contains("fence"))
                         data[i - 1].setFace(doBlockFace(ab.blockFace, i), true);
                     else
@@ -341,10 +328,7 @@ public class Rotating90 implements Mirroring {
         else if (ab.block.getBlockData() instanceof Slab && ((Slab) ab.block.getBlockData()).getType() == Slab.Type.DOUBLE)
             data.setFace(doBlockFace(ab.blockFace, i), true);
         else if (ab.block.getBlockData() instanceof Stairs) {
-            if (((Stairs) ab.block.getBlockData()).getFacing().getOppositeFace() == ab.blockFace)
-                data.setFace(doBlockFace(ab.blockFace, i), true);
-            else
-                data.setFace(doBlockFace(ab.blockFace, i), false);
+            data.setFace(doBlockFace(ab.blockFace, i), ((Stairs) ab.block.getBlockData()).getFacing().getOppositeFace() == ab.blockFace);
         } else
             data.setFace(doBlockFace(ab.blockFace, i), false);
         return data;
@@ -371,26 +355,26 @@ public class Rotating90 implements Mirroring {
         Switch data270 = (Switch) user.variables.dataCopy.clone();
         if (Functions.Up(user)) {
             switch (Functions.LookDirection(user)) {
-                case "south":
+                case "south" -> {
                     data90.setFacing(WEST);
                     data180.setFacing(NORTH);
                     data270.setFacing(EAST);
-                    break;
-                case "north":
+                }
+                case "north" -> {
                     data90.setFacing(EAST);
                     data180.setFacing(SOUTH);
                     data270.setFacing(WEST);
-                    break;
-                case "east":
+                }
+                case "east" -> {
                     data90.setFacing(SOUTH);
                     data180.setFacing(WEST);
                     data270.setFacing(NORTH);
-                    break;
-                case "west":
+                }
+                case "west" -> {
                     data90.setFacing(NORTH);
                     data180.setFacing(EAST);
                     data270.setFacing(SOUTH);
-                    break;
+                }
             }
             data90.setFace(Switch.Face.FLOOR);
             data180.setFace(Switch.Face.FLOOR);
@@ -475,7 +459,7 @@ public class Rotating90 implements Mirroring {
         if (data.getType() == Slab.Type.DOUBLE) {
             for (AdjacentBlock ab : Functions.getRelatives(user.variables.currentBlock))
                 if (ab.block.getBlockData() instanceof Fence) {
-                    Fence fence[] = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
+                    Fence[] fence = Arrays.copyOf(doFencePane(ab.block), 3, Fence[].class);
                     PlaceRelatives(fence[0], fence[1], fence[2], ab.blockFace, ab.block.getType());
                 }
         }
@@ -496,50 +480,46 @@ public class Rotating90 implements Mirroring {
         Door datat180 = (Door) datat.clone();
         Door datat270 = (Door) datat.clone();
         switch (Functions.LookDirection(user)) {
-            case "south":
+            case "south" -> {
                 datab90.setFacing(WEST);
                 datab180.setFacing(NORTH);
                 datab270.setFacing(EAST);
                 Place(datab90, datab180, datab270);
-
                 datab90.setFacing(WEST);
                 datab180.setFacing(NORTH);
                 datab270.setFacing(EAST);
                 Place(datab90, datab180, datab270, 1);
-                break;
-            case "north":
+            }
+            case "north" -> {
                 datab90.setFacing(EAST);
                 datab180.setFacing(SOUTH);
                 datab270.setFacing(WEST);
                 Place(datab90, datab180, datab270);
-
                 datat90.setFacing(EAST);
                 datat180.setFacing(SOUTH);
                 datat270.setFacing(WEST);
                 Place(datab90, datab180, datab270, 1);
-                break;
-            case "east":
+            }
+            case "east" -> {
                 datab90.setFacing(SOUTH);
                 datab180.setFacing(WEST);
                 datab270.setFacing(NORTH);
                 Place(datab90, datab180, datab270);
-
                 datat90.setFacing(SOUTH);
                 datat180.setFacing(WEST);
                 datat270.setFacing(NORTH);
                 Place(datab90, datab180, datab270, 1);
-                break;
-            case "west":
+            }
+            case "west" -> {
                 datab90.setFacing(NORTH);
                 datab180.setFacing(EAST);
                 datab270.setFacing(SOUTH);
                 Place(datab90, datab180, datab270);
-
                 datat90.setFacing(SOUTH);
                 datat180.setFacing(WEST);
                 datat270.setFacing(NORTH);
                 Place(datab90, datab180, datab270, 1);
-                break;
+            }
         }
     }
 
@@ -906,26 +886,26 @@ public class Rotating90 implements Mirroring {
         Directional data180 = (Directional) user.variables.dataCopy.clone();
         Directional data270 = (Directional) user.variables.dataCopy.clone();
         switch (data.getFacing()) {
-            case NORTH:
+            case NORTH -> {
                 data90.setFacing(BlockFace.EAST);
                 data180.setFacing(BlockFace.EAST);
                 data270.setFacing(BlockFace.EAST);
-                break;
-            case EAST:
+            }
+            case EAST -> {
                 data90.setFacing(BlockFace.EAST);
                 data180.setFacing(BlockFace.EAST);
                 data270.setFacing(BlockFace.EAST);
-                break;
-            case SOUTH:
+            }
+            case SOUTH -> {
                 data90.setFacing(BlockFace.EAST);
                 data180.setFacing(BlockFace.EAST);
                 data270.setFacing(BlockFace.EAST);
-                break;
-            case WEST:
+            }
+            case WEST -> {
                 data90.setFacing(BlockFace.EAST);
                 data180.setFacing(BlockFace.EAST);
                 data270.setFacing(BlockFace.EAST);
-                break;
+            }
         }
         Place(data90, data180, data270);
     }

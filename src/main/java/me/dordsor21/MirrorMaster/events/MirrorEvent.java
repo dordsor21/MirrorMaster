@@ -8,7 +8,7 @@ import org.bukkit.event.HandlerList;
 public class MirrorEvent extends Event implements Cancellable {
 
     private final HandlerList handlers = new HandlerList();
-    private User user;
+    private final User user;
     private boolean cancelled;
 
     public MirrorEvent(User user) {

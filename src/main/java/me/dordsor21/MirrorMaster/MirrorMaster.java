@@ -51,52 +51,42 @@ public class MirrorMaster extends JavaPlugin implements Listener {
                 variables.loc.setY(user.variables.loc.getY() - 1.0D);
                 user.variables(variables);
                 switch (args[0].toLowerCase()) {
-                    case "tp":
-                    case "teleport":
+                    case "tp", "teleport" -> {
                         Commands.Teleport(user);
                         return true;
-                    case "change":
-                    case "ch":
+                    }
+                    case "change", "ch" -> {
                         Commands.Change(args[1], user);
                         return true;
-                    case "mirrorcross":
-                    case "c":
-                    case "cross":
+                    }
+                    case "mirrorcross", "c", "cross" -> {
                         Commands.CrossMirroring(user);
                         return true;
-                    case "mirrorx":
-                    case "mx":
-                    case "x":
+                    }
+                    case "mirrorx", "mx", "x" -> {
                         Commands.XMirroring(user);
                         return true;
-                    case "mirrorz":
-                    case "mz":
-                    case "z":
+                    }
+                    case "mirrorz", "mz", "z" -> {
                         Commands.ZMirroring(user);
                         return true;
-                    case "rot180":
-                    case "rotate180":
-                    case "r180":
-                    case "180":
+                    }
+                    case "rot180", "rotate180", "r180", "180" -> {
                         Commands.Rotation180(user);
                         return true;
-                    case "rot90":
-                    case "rotate90":
-                    case "r90":
-                    case "90":
+                    }
+                    case "rot90", "rotate90", "r90", "90" -> {
                         Commands.Rotation90(user);
                         return true;
-                    case "mirrorstop":
-                    case "stop":
-                    case "s":
+                    }
+                    case "mirrorstop", "stop", "s" -> {
                         Commands.StopMirroring(user);
                         return true;
-                    case "help":
-                    case "h":
-                    case "?":
-                    default:
+                    }
+                    default -> {
                         Commands.Help(user);
                         return true;
+                    }
                 }
             } else {
                 Commands.Help(user);

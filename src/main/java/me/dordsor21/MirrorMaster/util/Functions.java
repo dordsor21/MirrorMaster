@@ -1,12 +1,12 @@
 package me.dordsor21.MirrorMaster.util;
 
-import com.github.intellectualsites.plotsquared.bukkit.util.BukkitUtil;
-import com.github.intellectualsites.plotsquared.plot.config.Captions;
-import com.github.intellectualsites.plotsquared.plot.config.Settings;
-import com.github.intellectualsites.plotsquared.plot.flag.Flags;
-import com.github.intellectualsites.plotsquared.plot.object.Plot;
-import com.github.intellectualsites.plotsquared.plot.object.PlotPlayer;
-import com.github.intellectualsites.plotsquared.plot.util.Permissions;
+import com.plotsquared.bukkit.util.BukkitUtil;
+import com.plotsquared.core.configuration.Settings;
+import com.plotsquared.core.permissions.Permission;
+import com.plotsquared.core.player.PlotPlayer;
+import com.plotsquared.core.plot.Plot;
+import com.plotsquared.core.plot.flag.implementations.DoneFlag;
+import com.plotsquared.core.util.Permissions;
 import me.dordsor21.MirrorMaster.MirrorMaster;
 import me.dordsor21.MirrorMaster.mirrors.Mirroring;
 import me.dordsor21.MirrorMaster.objects.AdjacentBlock;
@@ -104,17 +104,17 @@ public class Functions {
 
     private static boolean p2CheckRemove(Location l, Player pl) {
         if (MirrorMaster.P2()) {
-            Plot p = BukkitUtil.getPlot(l);
-            PlotPlayer pp = PlotPlayer.wrap(pl);
+            PlotPlayer pp = BukkitUtil.adapt(pl);
+            Plot p = pp.getCurrentPlot();
             if (p != null) {
                 if (!p.hasOwner())
-                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_DESTROY_UNOWNED);
-                if (Settings.Done.RESTRICT_BUILDING && p.getFlags().containsKey(Flags.DONE))
-                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_DESTROY_OTHER);
+                    return Permissions.hasPermission(pp, Permission.PERMISSION_ADMIN_DESTROY_UNOWNED);
+                if (Settings.Done.RESTRICT_BUILDING && DoneFlag.isDone(p))
+                    return Permissions.hasPermission(pp, Permission.PERMISSION_ADMIN_DESTROY_OTHER);
                 if (!p.isAdded(pp.getUUID()))
-                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_DESTROY_OTHER);
+                    return Permissions.hasPermission(pp, Permission.PERMISSION_ADMIN_DESTROY_OTHER);
             } else {
-                return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_DESTROY_ROAD);
+                return Permissions.hasPermission(pp, Permission.PERMISSION_ADMIN_DESTROY_ROAD);
             }
         }
         return true;
@@ -122,17 +122,17 @@ public class Functions {
 
     private static boolean p2CheckPlace(Location l, Player pl) {
         if (MirrorMaster.P2()) {
-            Plot p = BukkitUtil.getPlot(l);
-            PlotPlayer pp = PlotPlayer.wrap(pl);
+            PlotPlayer pp = BukkitUtil.adapt(pl);
+            Plot p = pp.getCurrentPlot();
             if (p != null) {
                 if (!p.hasOwner())
-                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_BUILD_UNOWNED);
-                if (Settings.Done.RESTRICT_BUILDING && p.getFlags().containsKey(Flags.DONE))
-                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_BUILD_OTHER);
+                    return Permissions.hasPermission(pp, Permission.PERMISSION_ADMIN_BUILD_UNOWNED);
+                if (Settings.Done.RESTRICT_BUILDING && DoneFlag.isDone(p))
+                    return Permissions.hasPermission(pp, Permission.PERMISSION_ADMIN_BUILD_OTHER);
                 if (!p.isAdded(pp.getUUID()))
-                    return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_BUILD_OTHER);
+                    return Permissions.hasPermission(pp, Permission.PERMISSION_ADMIN_BUILD_OTHER);
             } else {
-                return Permissions.hasPermission(pp, Captions.PERMISSION_ADMIN_BUILD_ROAD);
+                return Permissions.hasPermission(pp, Permission.PERMISSION_ADMIN_BUILD_ROAD);
             }
         }
         return true;

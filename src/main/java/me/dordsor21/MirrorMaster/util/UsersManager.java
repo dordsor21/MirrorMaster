@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 
 public class UsersManager {
-    private static HashMap<Player, User> users = new HashMap<>();
+    private static final HashMap<Player, User> users = new HashMap<>();
 
     static void Set(User user) {
         users.replace(user.player, user);

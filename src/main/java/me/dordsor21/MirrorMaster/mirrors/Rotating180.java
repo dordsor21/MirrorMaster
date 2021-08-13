@@ -17,7 +17,7 @@ import static org.bukkit.block.BlockFace.*;
 @SuppressWarnings("Duplicates")
 public class Rotating180 implements Mirroring {
 
-    private User user;
+    private final User user;
 
     public Rotating180(User user) {
         this.user = user;
@@ -32,18 +32,10 @@ public class Rotating180 implements Mirroring {
         Stairs data180 = (Stairs) data.clone();
         data.setShape(Stairs.Shape.valueOf(shape.contains("LEFT") ? shape.replace("LEFT", "RIGHT") : shape.replace("RIGHT", "LEFT")));
         switch (Functions.LookDirection(user)) {
-            case "south":
-                data180.setFacing(NORTH);
-                break;
-            case "north":
-                data180.setFacing(SOUTH);
-                break;
-            case "east":
-                data180.setFacing(WEST);
-                break;
-            case "west":
-                data180.setFacing(EAST);
-                break;
+            case "south" -> data180.setFacing(NORTH);
+            case "north" -> data180.setFacing(SOUTH);
+            case "east" -> data180.setFacing(WEST);
+            case "west" -> data180.setFacing(EAST);
         }
         Place(data180);
 
@@ -62,18 +54,14 @@ public class Rotating180 implements Mirroring {
             if (user.variables.currentBlock.getType() == Material.NETHER_BRICK_FENCE) {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace)) {
-                        data180.setFace(doBlockFace(ab.blockFace), true);
-                    } else {
-                        data180.setFace(doBlockFace(ab.blockFace), false);
-                    }
+                    data180.setFace(doBlockFace(ab.blockFace), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                 } else if (ab.block.getType() == Material.NETHER_BRICK_FENCE) {
                     data180.setFace(doBlockFace(ab.blockFace), true);
                     Fence fence = (Fence) doFencePane(ab.block);
 
                     PlaceRelatives(fence, ab.blockFace, ab.block.getType());
                 } else {
-                    data180 = (Fence) genericFencePane(data180, ab);
+                    genericFencePane(data180, ab);
                 }
             } else if (user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")) {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
@@ -94,7 +82,7 @@ public class Rotating180 implements Mirroring {
 
                     PlaceRelatives(wall, ab.blockFace, ab.block.getType());
                 } else {
-                    data180 = (Fence) genericFencePane(data180, ab);
+                    genericFencePane(data180, ab);
                 }
             } else if (user.variables.currentBlock.getType().name().equalsIgnoreCase("iron_bars")) {
                 if (ab.block.getType().name().toLowerCase().contains("glass_pane")) {
@@ -108,34 +96,26 @@ public class Rotating180 implements Mirroring {
                     Fence bars = (Fence) doFencePane(ab.block);
                     PlaceRelatives(bars, ab.blockFace, ab.block.getType());
                 } else {
-                    data180 = (Fence) genericFencePane(data180, ab);
+                    genericFencePane(data180, ab);
                 }
             } else {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace)) {
-                        data180.setFace(doBlockFace(ab.blockFace), true);
-                    } else {
-                        data180.setFace(doBlockFace(ab.blockFace), false);
-                    }
+                    data180.setFace(doBlockFace(ab.blockFace), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                 } else if (ab.block.getType().name().toLowerCase().contains("fence")) {
                     data180.setFace(doBlockFace(ab.blockFace), true);
 
                     Fence fence = (Fence) doFencePane(ab.block);
                     PlaceRelatives(fence, ab.blockFace, ab.block.getType());
                 } else {
-                    data180 = (Fence) genericFencePane(data180, ab);
+                    genericFencePane(data180, ab);
                 }
             }
         }
         if (user.variables.currentBlock.getType().name().toLowerCase().contains("cobblestone_wall")) {
             Fence data = (Fence) user.variables.dataCopy;
-            if ((data.getFaces().contains(EAST) && data.getFaces().contains(WEST)) && !(data.getFaces().contains(NORTH) || data.getFaces().contains(SOUTH))
-                    || !(data.getFaces().contains(EAST) || data.getFaces().contains(WEST)) && (data.getFaces().contains(NORTH) && data.getFaces().contains(SOUTH))) {
-                data180.setFace(UP, false);
-            } else {
-                data180.setFace(UP, true);
-            }
+            data180.setFace(UP, ((!data.getFaces().contains(EAST) || !data.getFaces().contains(WEST)) || (data.getFaces().contains(NORTH) || data.getFaces().contains(SOUTH)))
+                    && ((data.getFaces().contains(EAST) || data.getFaces().contains(WEST)) || (!data.getFaces().contains(NORTH) || !data.getFaces().contains(SOUTH))));
         }
         Place(data180);
     }
@@ -152,7 +132,7 @@ public class Rotating180 implements Mirroring {
                 Fence bars = (Fence) doFencePane(ab.block);
                 PlaceRelatives(bars, ab.blockFace, ab.block.getType());
             } else {
-                data180 = (GlassPane) genericFencePane(data180, ab);
+                genericFencePane(data180, ab);
             }
         Place(data180);
         if (user.variables.touchingBlock.getType().name().toLowerCase().contains("glass_pane")) {
@@ -185,79 +165,62 @@ public class Rotating180 implements Mirroring {
             if (b.getType() == Material.NETHER_BRICK_FENCE) {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
-                    else
-                        data.setFace(doBlockFace(ab.blockFace), false);
+                    data.setFace(doBlockFace(ab.blockFace), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                 } else if (ab.block.getType() == Material.NETHER_BRICK_FENCE)
                     data.setFace(doBlockFace(ab.blockFace), true);
-                else
-                    data = genericFencePane(data, ab);
+                else {
+                    genericFencePane(data, ab);
+                }
             } else if (b.getType().name().toLowerCase().contains("cobblestone_wall")) {
                 if (ab.block.getType().name().toLowerCase().contains("cobblestone_wall"))
                     data.setFace(doBlockFace(ab.blockFace), true);
                 else if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace)) {
-                        data.setFace(doBlockFace(ab.blockFace), true);
-                    } else {
-                        data.setFace(doBlockFace(ab.blockFace), false);
-                    }
-                } else
-                    data = genericFencePane(data, ab);
-                if (((data.getFaces().contains(EAST) && data.getFaces().contains(WEST)) && !(data.getFaces().contains(NORTH) || data.getFaces().contains(SOUTH)))
-                        || (!(data.getFaces().contains(EAST) || data.getFaces().contains(WEST)) && (data.getFaces().contains(NORTH) && data.getFaces().contains(SOUTH))))
-                    data.setFace(UP, false);
-                else
-                    data.setFace(UP, true);
+                    data.setFace(doBlockFace(ab.blockFace), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
+                } else {
+                    genericFencePane(data, ab);
+                }
+                data.setFace(UP, ((!data.getFaces().contains(EAST) || !data.getFaces().contains(WEST)) || (data.getFaces().contains(NORTH) || data.getFaces().contains(SOUTH)))
+                        && ((data.getFaces().contains(EAST) || data.getFaces().contains(WEST)) || (!data.getFaces().contains(NORTH) || !data.getFaces().contains(SOUTH))));
             } else if (b.getType().name().equalsIgnoreCase("iron_bars") || b.getType().name().toLowerCase().contains("glass_pane")) {
                 if (ab.block.getType().name().equalsIgnoreCase("iron_bars") || ab.block.getType().name().toLowerCase().contains("glass_pane"))
                     data.setFace(doBlockFace(ab.blockFace), true);
-                else
-                    data = genericFencePane(data, ab);
+                else {
+                    genericFencePane(data, ab);
+                }
             } else {
                 if (ab.block.getType().name().toLowerCase().contains("gate")) {
                     Gate gate = (Gate) ab.block.getBlockData().clone();
-                    if (!((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace))
-                        data.setFace(doBlockFace(ab.blockFace), true);
-                    else
-                        data.setFace(doBlockFace(ab.blockFace), false);
+                    data.setFace(doBlockFace(ab.blockFace), !((gate.getFacing() == ab.blockFace) || gate.getFacing().getOppositeFace() == ab.blockFace));
                 } else if (ab.block.getType().name().toLowerCase().contains("fence"))
                     data.setFace(doBlockFace(ab.blockFace), true);
-                else
-                    data = genericFencePane(data, ab);
+                else {
+                    genericFencePane(data, ab);
+                }
             }
         }
         return data;
     }
 
     private BlockFace doBlockFace(BlockFace bf) {
-        switch (bf) {
-            case NORTH:
-                return SOUTH;
-            case EAST:
-                return WEST;
-            case SOUTH:
-                return NORTH;
-            case WEST:
-                return EAST;
-        }
-        return bf;
+        return switch (bf) {
+            case NORTH -> SOUTH;
+            case EAST -> WEST;
+            case SOUTH -> NORTH;
+            case WEST -> EAST;
+            default -> bf;
+        };
     }
 
-    private MultipleFacing genericFencePane(MultipleFacing data, AdjacentBlock ab) {
+    private void genericFencePane(MultipleFacing data, AdjacentBlock ab) {
         if (ab.block.getType().isSolid() && ab.block.getType().isOccluding())
             data.setFace(doBlockFace(ab.blockFace), true);
         else if (ab.block.getBlockData() instanceof Slab && ((Slab) ab.block.getBlockData()).getType() == Slab.Type.DOUBLE)
             data.setFace(doBlockFace(ab.blockFace), true);
         else if (ab.block.getBlockData() instanceof Stairs) {
-            if (((Stairs) ab.block.getBlockData()).getFacing().getOppositeFace() == ab.blockFace)
-                data.setFace(doBlockFace(ab.blockFace), true);
-            else
-                data.setFace(doBlockFace(ab.blockFace), false);
+            data.setFace(doBlockFace(ab.blockFace), ((Stairs) ab.block.getBlockData()).getFacing().getOppositeFace() == ab.blockFace);
         } else
             data.setFace(doBlockFace(ab.blockFace), false);
-        return data;
     }
 
     public void Gates() {
@@ -275,18 +238,10 @@ public class Rotating180 implements Mirroring {
         Switch data180 = (Switch) user.variables.dataCopy.clone();
         if (Functions.Up(user)) {
             switch (Functions.LookDirection(user)) {
-                case "south":
-                    data180.setFacing(NORTH);
-                    break;
-                case "north":
-                    data180.setFacing(SOUTH);
-                    break;
-                case "east":
-                    data180.setFacing(WEST);
-                    break;
-                case "west":
-                    data180.setFacing(EAST);
-                    break;
+                case "south" -> data180.setFacing(NORTH);
+                case "north" -> data180.setFacing(SOUTH);
+                case "east" -> data180.setFacing(WEST);
+                case "west" -> data180.setFacing(EAST);
             }
             data180.setFace(Switch.Face.FLOOR);
         } else if (Functions.Down(user)) {
@@ -360,50 +315,46 @@ public class Rotating180 implements Mirroring {
         Door datat180 = (Door) datat.clone();
         Door datat270 = (Door) datat.clone();
         switch (Functions.LookDirection(user)) {
-            case "south":
+            case "south" -> {
                 datab90.setFacing(WEST);
                 datab180.setFacing(NORTH);
                 datab270.setFacing(EAST);
                 Place(datab180);
-
                 datab90.setFacing(WEST);
                 datab180.setFacing(NORTH);
                 datab270.setFacing(EAST);
                 Place(datab180, 1);
-                break;
-            case "north":
+            }
+            case "north" -> {
                 datab90.setFacing(EAST);
                 datab180.setFacing(SOUTH);
                 datab270.setFacing(WEST);
                 Place(datab180);
-
                 datat90.setFacing(EAST);
                 datat180.setFacing(SOUTH);
                 datat270.setFacing(WEST);
                 Place(datab180, 1);
-                break;
-            case "east":
+            }
+            case "east" -> {
                 datab90.setFacing(SOUTH);
                 datab180.setFacing(WEST);
                 datab270.setFacing(NORTH);
                 Place(datab180);
-
                 datat90.setFacing(SOUTH);
                 datat180.setFacing(WEST);
                 datat270.setFacing(NORTH);
                 Place(datab180, 1);
-                break;
-            case "west":
+            }
+            case "west" -> {
                 datab90.setFacing(NORTH);
                 datab180.setFacing(EAST);
                 datab270.setFacing(SOUTH);
                 Place(datab180);
-
                 datat90.setFacing(SOUTH);
                 datat180.setFacing(WEST);
                 datat270.setFacing(NORTH);
                 Place(datab180, 1);
-                break;
+            }
         }
     }
 
@@ -603,18 +554,10 @@ public class Rotating180 implements Mirroring {
         Directional data = (Directional) user.variables.dataCopy;
         Directional data180 = (Directional) user.variables.dataCopy.clone();
         switch (data.getFacing()) {
-            case NORTH:
-                data180.setFacing(BlockFace.EAST);
-                break;
-            case EAST:
-                data180.setFacing(BlockFace.EAST);
-                break;
-            case SOUTH:
-                data180.setFacing(BlockFace.EAST);
-                break;
-            case WEST:
-                data180.setFacing(BlockFace.EAST);
-                break;
+            case NORTH -> data180.setFacing(BlockFace.EAST);
+            case EAST -> data180.setFacing(BlockFace.EAST);
+            case SOUTH -> data180.setFacing(BlockFace.EAST);
+            case WEST -> data180.setFacing(BlockFace.EAST);
         }
         Place(data180);
     }
