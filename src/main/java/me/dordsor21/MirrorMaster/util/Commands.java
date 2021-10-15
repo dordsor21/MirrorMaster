@@ -147,8 +147,8 @@ public class Commands {
     public static void Help(User user) {
         user.player.sendMessage("MirrorMaster command list:");
         user.player.sendMessage("/mm [x/z/c] (Uses the axis as a mirror, c uses both)");
-        user.player.sendMessage("/mm [r180] (Rotates around the center)");
-        user.player.sendMessage("/mm change [x/z/c/r180] (Change mirrotype)");
+        user.player.sendMessage("/mm [r180/r90] (Rotates around the center)");
+        user.player.sendMessage("/mm change [x/z/c/r180/r90] (Change mirrortype)");
         user.player.sendMessage("/mm tp (Teleport you to the center)");
     }
 }
