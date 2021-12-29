@@ -5,3 +5,7 @@ MirrorMaster command list:
   - /mm [r180/r90] (Rotates around the center)
   - /mm change [x/z/c/r180/r90] (Change mirrortype)
   - /mm tp (Teleport you to the center)
+
+Originally from https://dev.bukkit.org/projects/mirrormaster
+
+Builds: https://ci.athion.net/view/Everything/job/MirrorMaster/
